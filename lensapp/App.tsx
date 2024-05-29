@@ -8,8 +8,14 @@ import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 
 import { StatusBar } from 'react-native';
 import { HomeScreen } from './screens/Home';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { TestScreen } from './screens/Test';
+import { createStackNavigator } from '@react-navigation/stack';
+import { LoginScreen } from './screens/Login';
+import { LoadingScreen } from './screens/LoadingScreen';
+
+const queryClient = new QueryClient()
 
 function App(): React.JSX.Element {
   const chains = [mainnet, polygon, arbitrum]
@@ -23,7 +29,7 @@ function App(): React.JSX.Element {
     }
   }
 
-  const Tabs = AnimatedTabBarNavigator();
+  const Stack = createStackNavigator();
   const projectId = '15db3eb2d5b1b8cd7ea8dc71d0459862'
   const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
 
@@ -34,18 +40,33 @@ function App(): React.JSX.Element {
     enableAnalytics: true // Optional - defaults to your Cloud configuration
   });
 
+
   return (
     <WagmiConfig config={wagmiConfig}>
-      <StatusBar barStyle={'light-content'} />
-      <NavigationContainer>
-
-        <Tabs.Navigator appearance={{}}>
-          <Tabs.Screen name="Home" component={HomeScreen} />
-          <Tabs.Screen name="Settings" component={TestScreen} />
-        </Tabs.Navigator>
-      </NavigationContainer>
-      <Web3Modal />
+      <QueryClientProvider client={queryClient}> 
+        <StatusBar barStyle={'light-content'} />
+        <NavigationContainer>
+          
+          <Stack.Navigator initialRouteName='Loading' screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Loading" component={LoadingScreen} />
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Main" component={TabsComponent} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <Web3Modal />
+      </QueryClientProvider>
     </WagmiConfig>
+  );
+}
+
+function TabsComponent() {
+  const Tabs = AnimatedTabBarNavigator();
+
+  return (
+    <Tabs.Navigator appearance={{}}>
+      <Tabs.Screen name="Home" component={HomeScreen} />
+      <Tabs.Screen name="Settings" component={TestScreen} />
+    </Tabs.Navigator>
   );
 }
 
