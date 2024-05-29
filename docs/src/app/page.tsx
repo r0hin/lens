@@ -6,6 +6,10 @@ export default function Home() {
 
         projectlens.xyz – a better way to prove trust
 
+        <br /><br />
+
+        hi@projectlens.xyz
+
       </div>
     </main>
   );
