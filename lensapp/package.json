@@ -1,5 +1,6 @@
 {
   "name": "lensapp",
+  "description": "A better way to prove trust",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,8 +11,19 @@
     "test": "jest"
   },
   "dependencies": {
+    "@coinbase/wallet-mobile-sdk": "^1.0.13",
+    "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/netinfo": "^11.3.2",
+    "@walletconnect/react-native-compat": "^2.13.1",
+    "@web3modal/wagmi-react-native": "^1.4.1",
     "react": "18.2.0",
-    "react-native": "0.74.1"
+    "react-native": "0.74.1",
+    "react-native-get-random-values": "^1.11.0",
+    "react-native-mmkv": "^2.12.2",
+    "react-native-modal": "^13.0.1",
+    "react-native-svg": "^15.3.0",
+    "viem": "1.21.4",
+    "wagmi": "1.4.13"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
