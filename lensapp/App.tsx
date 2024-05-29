@@ -4,6 +4,44 @@ import '@walletconnect/react-native-compat'
 import { WagmiConfig } from 'wagmi'
 import { mainnet, polygon, arbitrum } from 'viem/chains'
 import { createWeb3Modal, defaultWagmiConfig, W3mButton, Web3Modal } from '@web3modal/wagmi-react-native'
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { Home } from "react-feather"
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import AnimatedTabBar, {TabsConfig, BubbleTabBarItemConfig} from '@gorhom/animated-tabbar';
+
+const tabs: TabsConfig<BubbleTabBarItemConfig> = {
+  Home: {
+    labelStyle: {
+      color: '#5B37B7',
+    },
+    icon: {
+      component: <Home />,
+      activeColor: 'rgba(91,55,183,1)',
+      inactiveColor: 'rgba(0,0,0,1)',
+    },
+    background: {
+      activeColor: 'rgba(223,215,243,1)',
+      inactiveColor: 'rgba(223,215,243,0)',
+    },
+  },
+  Profile: {
+    labelStyle: {
+      color: '#1194AA',
+    },
+    icon: {
+      component: <Home />,
+      activeColor: 'rgba(17,148,170,1)',
+      inactiveColor: 'rgba(0,0,0,1)',
+    },
+    background: {
+      activeColor: 'rgba(207,235,239,1)',
+      inactiveColor: 'rgba(207,235,239,0)',
+    },
+  },
+};
+
+const Tab = createBottomTabNavigator();
 
 const projectId = '15db3eb2d5b1b8cd7ea8dc71d0459862'
 
@@ -33,8 +71,6 @@ import {
   SafeAreaView,
   ScrollView,
   StatusBar,
-  StyleSheet,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -42,55 +78,42 @@ import {
   Colors,
   Header,
 } from 'react-native/Libraries/NewAppScreen';
+import { HomeScreen } from './screens/Home';
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: "#000000"
   };
 
   return (
     <WagmiConfig config={wagmiConfig}>
       <SafeAreaView style={backgroundStyle}>
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor={backgroundStyle.backgroundColor}
-        />
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={backgroundStyle}>
-          <Header />
-          <View
-            style={{
-              backgroundColor: isDarkMode ? Colors.black : Colors.white,
-            }}>
-            <W3mButton />
-          </View>
-        </ScrollView>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <StatusBar barStyle={'light-content'} backgroundColor={backgroundStyle.backgroundColor} />
+            <NavigationContainer>
+              <Tab.Navigator
+                tabBar={(props: any) => (
+                  <AnimatedTabBar tabs={tabs} {...props} />
+                )}
+              >
+                <Tab.Screen
+                  name="Home"
+                  component={HomeScreen}
+                />
+                <Tab.Screen
+                  name="Profile"
+                  component={HomeScreen}
+                />
+              </Tab.Navigator>
+            </NavigationContainer>
+          {/* <ScrollView contentInsetAdjustmentBehavior="automatic" style={backgroundStyle}>
+              <W3mButton />
+          </ScrollView> */}
+        </GestureHandlerRootView>
       </SafeAreaView>
       <Web3Modal />
     </WagmiConfig>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;
