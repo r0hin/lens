@@ -9,14 +9,21 @@ import { useAccount } from 'wagmi';
 
 export function OnboardScreen() {
   const [vendorModalVisible, setVendorModalVisible] = React.useState(false);
-  const [publicKeyInput, setPublicKeyInput] = React.useState("");
   const [privateKeyInput, setPrivateKeyInput] = React.useState("");
   const account = useAccount();
 
   const useOwnKeys = async () => {
-    await AsyncStorage.setItem('public', privateKeyInput)
+      // Get public key from private key input
+      const publicKey = "aaa11"
+      
+    await Promise.all([
+      await AsyncStorage.setItem('private', privateKeyInput),
+      await AsyncStorage.setItem('public', publicKey)
+    ]);
+
+
     await firestore().collection("users").doc(account.address).set({
-      publicKey: publicKeyInput
+      publicKey: publicKey
     });
   }
 
@@ -60,7 +67,7 @@ export function OnboardScreen() {
                   height: 92,
                   color: "white",
                   width: "100%"
-                }} placeholder="-----BEGIN RSA PUBLIC KEY-----" placeholderTextColor="#a3a3a3" onChangeText={(text) => setPublicKeyInput(text)} />
+                }} placeholder="-----BEGIN RSA PRIVATE KEY-----" placeholderTextColor="#a3a3a3" onChangeText={(text) => setPrivateKeyInput(text)} />
 
                 <TouchableOpacity style={{
                   backgroundColor: "#5371FF",
@@ -79,7 +86,7 @@ export function OnboardScreen() {
           </Modal>
         </View>
         <View style={{ padding: 12, borderRadius: 8, marginTop: 48, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-          <Icon name='key' color={"#a3a3a3"} size={96} />
+          <Icon name='shield' color={"#a3a3a3"} size={96} />
         </View>
         <View>
           <View style={{ flexDirection: "row" }}>
