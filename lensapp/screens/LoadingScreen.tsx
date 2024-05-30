@@ -1,29 +1,26 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
-import { View, Text, Alert } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text } from 'react-native';
 
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 export function LoadingScreen() {
   const navigation = useNavigation();
-  const { address } = useAccount()
+  const { status } = useAccount()
+
 
   useEffect(() => {
-    if (address) {
+    if (status == "connected") {
       navigation.navigate("Main" as never);
     }
-    else {
+    else if (status == "disconnected") {
       navigation.navigate("Login" as never);
     }
-  })
+  }, [status])
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000" }}>
-      <Text>Loading</Text>
-      {/* <TouchableOpacity onPress={onFinishLoading}>
-        <Text>Finish loading</Text>
-      </TouchableOpacity> */}
+      <Text style={{color: "white"}}>Loading</Text>
     </View>
   );
 }

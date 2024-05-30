@@ -2,7 +2,7 @@ import React from 'react';
 
 import '@walletconnect/react-native-compat'
 import { WagmiConfig } from 'wagmi'
-import { mainnet, polygon, arbitrum } from 'viem/chains'
+import { rootstock } from 'viem/chains'
 import { createWeb3Modal, defaultWagmiConfig, Web3Modal } from '@web3modal/wagmi-react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
 import {Appearance} from 'react-native';
@@ -18,7 +18,7 @@ import { LoadingScreen } from './screens/LoadingScreen';
 const queryClient = new QueryClient()
 
 function App(): React.JSX.Element {
-  const chains = [mainnet, polygon, arbitrum]
+  const chains = [rootstock]
   const metadata = {
     name: 'Project Lens',
     description: 'A better way to prove trust',
@@ -44,8 +44,6 @@ function App(): React.JSX.Element {
     enableAnalytics: true // Optional - defaults to your Cloud configuration
   });
 
-  Appearance.setColorScheme("dark");
-
   return (
     <WagmiConfig config={wagmiConfig}>
       <QueryClientProvider client={queryClient}> 
@@ -69,8 +67,8 @@ function TabsComponent() {
 
   return (
     <Tabs.Navigator appearance={{}}>
-      <Tabs.Screen name="Home" component={HomeScreen} />
-      <Tabs.Screen name="Settings" component={TestScreen} />
+      <Tabs.Screen name="User" component={HomeScreen} />
+      <Tabs.Screen name="Vendor" component={TestScreen} />
     </Tabs.Navigator>
   );
 }
