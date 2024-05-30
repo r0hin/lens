@@ -11,15 +11,18 @@ export function LoadingScreen() {
   const [userOnboarded, setUserOnboarded] = useState(2)
   const { status, address } = useAccount()
 
-  // Get vendor list.
-
   useEffect(() => {
+
     let unsubscribe = () => {};
     if (status == "connected") {
       unsubscribe = firestore().collection("users").doc(address).onSnapshot(async (doc) => {
         if (doc.exists) {
           await AsyncStorage.setItem('public', doc.data()?.publicKey)
-          setUserOnboarded(1);
+
+          // If its a VENDOR, set it to 3
+          setUserOnboarded(3);
+
+          // setUserOnboarded(1);
         }
         else {
           setUserOnboarded(0);
@@ -45,6 +48,9 @@ export function LoadingScreen() {
       }
       else if (userOnboarded == 0) {
         navigation.navigate("Onboard" as never);
+      }
+      else if (userOnboarded == 3) {
+        navigation.navigate("Vendor" as never);
       }
       else {} // Do nothing, still determining if user is onboarded.
     }
