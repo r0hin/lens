@@ -8,6 +8,7 @@ export function LoadingScreen() {
   const navigation = useNavigation();
   const { status } = useAccount()
 
+  // Get vendor list.
 
   useEffect(() => {
     if (status == "connected") {

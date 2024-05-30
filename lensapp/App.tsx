@@ -22,6 +22,8 @@ import { LoginScreen } from './screens/Login';
 import { LoadingScreen } from './screens/LoadingScreen';
 import Icon from "react-native-vector-icons/Feather"
 import { SettingsScreen } from './screens/SettingsScreen';
+import { CardsScreen } from './screens/CardsScreen';
+import { VendorScreen } from './screens/VendorScreen';
 const queryClient = new QueryClient()
 
 
@@ -62,6 +64,7 @@ function App(): React.JSX.Element {
             <Stack.Screen name="Loading" component={LoadingScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Main" component={TabsComponent} />
+            <Stack.Screen name="Vendor" component={VendorScreen} />
           </Stack.Navigator>
         </NavigationContainer>
         <Web3Modal />
@@ -88,7 +91,7 @@ function TabsComponent() {
       floating: true,
     }}>
       <Tabs.Screen name="Credit" component={HomeScreen} options={{ tabBarIcon: ({ }) => ( <Icon name="home" size={17} color={"white"}/> ) }} />
-      <Tabs.Screen name="Cards" component={TestScreen} options={{ tabBarIcon: ({ }) => ( <Icon name="credit-card" size={17} color={"white"}/> ) }} />
+      <Tabs.Screen name="Cards" component={CardsScreen} options={{ tabBarIcon: ({ }) => ( <Icon name="credit-card" size={17} color={"white"}/> ) }} />
       <Tabs.Screen name="Settings" component={SettingsScreen} options={{ tabBarIcon: ({ }) => ( <Icon name="user" size={17} color={"white"}/> ) }} />
     </Tabs.Navigator>
   );
