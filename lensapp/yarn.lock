@@ -2635,6 +2635,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-clipboard/clipboard@npm:1.13.2":
+  version: 1.13.2
+  resolution: "@react-native-clipboard/clipboard@npm:1.13.2"
+  peerDependencies:
+    react: ">=16.0"
+    react-native: ">=0.57.0"
+  checksum: e26a2b92ff4cd8f5cc1bd5ae784fa7b2d9437d7801abf9a09bf34ddb450bb5e898256e1793f22543ef0576710dab99fa6ccf693364a04f1334acc6eccd64b497
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:13.6.6":
   version: 13.6.6
   resolution: "@react-native-community/cli-clean@npm:13.6.6"
@@ -8921,6 +8931,7 @@ __metadata:
     "@babel/runtime": ^7.20.0
     "@coinbase/wallet-mobile-sdk": ^1.0.13
     "@react-native-async-storage/async-storage": ^1.23.1
+    "@react-native-clipboard/clipboard": 1.13.2
     "@react-native-community/netinfo": ^11.3.2
     "@react-native-firebase/app": ^20.0.0
     "@react-native-firebase/firestore": ^20.0.0

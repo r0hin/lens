@@ -59,8 +59,8 @@ export function HomeScreen() {
         <SafeAreaView style={{ padding: 12 }}>
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "flex-end", paddingTop: 24, width: "100%" }}>
             {/* Gradient text */}
-            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -1 }}>300</Text>
-            <Text style={{ color: "gray", fontSize: 32, textAlign: "center", fontWeight: 400, fontFamily: "SF Mono", paddingBottom: 8, marginLeft: 2, letterSpacing: -1 }}>+8</Text>
+            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>300</Text>
+            <Text style={{ color: "gray", fontSize: 32, textAlign: "center", fontWeight: 400, fontFamily: "SF Mono", paddingBottom: 8, marginLeft: 2, letterSpacing: -3 }}>+8</Text>
           </View>
 
           <Modal animationType="slide" presentationStyle="formSheet" visible={vendorModalVisible} onRequestClose={() => { setVendorModalVisible(!vendorModalVisible) }}>

@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import Clipboard from '@react-native-clipboard/clipboard';
 import { W3mAccountButton, useWeb3Modal } from '@web3modal/wagmi-react-native';
 
 export function SettingsScreen() {
@@ -48,24 +49,43 @@ export function SettingsScreen() {
         <SafeAreaView style={{ padding: 12 }}>
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", paddingTop: 24, width: "100%" }}>
             {/* Gradient text */}
-            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -1 }}>{account.address?.substring(0, 5)}...</Text>
+            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>{account.address?.substring(0, 7)}–</Text>
           </View>
 
-          <TouchableOpacity style={{
-            borderColor: "#121315",
-            borderWidth: 3,
-            borderStyle: "dotted",
-            padding: 12,
-            borderRadius: 12,
-            marginTop: 24,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%"
-          }} onPress={() => {open()}}>
-            <Icon name="user" size={16} color="white" />
-            <Text style={{ color: "white", fontSize: 14, fontWeight: 500, marginLeft: 8 }}>Switch Accounts</Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", paddingTop: 24, width: "100%" }}>
+            <TouchableOpacity style={{
+              borderColor: "#121315",
+              borderWidth: 3,
+              borderStyle: "dotted",
+              padding: 12,
+              borderRadius: 12,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              marginHorizontal: 8,
+            }} onPress={() => {open()}}>
+              <Icon name="user" size={16} color="white" />
+              <Text style={{ color: "white", fontSize: 14, fontWeight: 500, marginLeft: 8 }}>Switch Accounts</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{
+              borderColor: "#121315",
+              borderWidth: 3,
+              borderStyle: "dotted",
+              padding: 12,
+              borderRadius: 12,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              marginHorizontal: 8,
+            }} onPress={() => {
+              Clipboard.setString(account.address || "no address");
+              
+            }}>
+              <Icon name="copy" size={16} color="white" />
+              <Text style={{ color: "white", fontSize: 14, fontWeight: 500, marginLeft: 8 }}>Copy Address</Text>
+            </TouchableOpacity>
+          </View>
+
 
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 24, width: "100%" }}>
             <Text style={{ color: "#a3a3a3", fontSize: 14, textTransform: "uppercase", fontWeight: 400, paddingTop: 24 }}>

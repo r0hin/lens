@@ -25,7 +25,7 @@ export function CardsScreen() {
         <SafeAreaView style={{ padding: 12 }}>
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", paddingTop: 24, width: "100%" }}>
             {/* Gradient text */}
-            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -1 }}>Cards</Text>
+            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>Cards</Text>
           </View>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 24, width: "100%" }}>
