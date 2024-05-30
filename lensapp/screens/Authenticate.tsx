@@ -1,37 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, Image, TouchableOpacity, Modal, Alert, KeyboardAvoidingView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import ReactNativeBiometrics from 'react-native-biometrics';
 import Icon from 'react-native-vector-icons/Feather';
-
-const faceIDEnabled = false;
+import { SETTINGS } from '../utils/settings';
 
 export function AuthenticateScreen() {
-  const [privateKeyInput, setPrivateKeyInput] = React.useState("");
-  const [showFaceID, setShowFaceID] = React.useState(true);
   const navigation = useNavigation();
   const rnBiometrics = new ReactNativeBiometrics()
 
-  useEffect(() => {
-    AsyncStorage.getItem('private').then((value) => {
-      if ([null, undefined, "", "null", "undefined"].includes(value)) {
-        setShowFaceID(false);
-      }
-    })
-  }, [])
-
   const authenticateAuto = async () => {
-    // Authenticate with Face ID.
     let result;
-    if (faceIDEnabled) result = await rnBiometrics.simplePrompt({ promptMessage: 'Authenticate with Face ID' });
+    if (SETTINGS.enableFaceID) result = await rnBiometrics.simplePrompt({ promptMessage: 'Authenticate with Face ID' });
     else result = { success: true }
     
     if (result?.success) {
-      const privateKey = await AsyncStorage.getItem('private');
-      // verify match
-  
       navigation.navigate("Main" as never);
     }
     else {

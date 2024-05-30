@@ -42,8 +42,8 @@ function App(): React.JSX.Element {
   }
 
   const Stack = createStackNavigator();
-  const projectId = '15db3eb2d5b1b8cd7ea8dc71d0459862'
-  const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
+  const projectId = '15db3eb2d5b1b8cd7ea8dc71d0459862';
+  const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 
   createWeb3Modal({
     projectId,

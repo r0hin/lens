@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, Modal, KeyboardAvoidingView } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Modal, KeyboardAvoidingView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/Feather';
 import { TextInput } from 'react-native-gesture-handler';
 import firestore from '@react-native-firebase/firestore';
 import { useAccount } from 'wagmi';
+import { generateKeyPair, validateAndGetKeys } from "../utils/crypto"
 
 export function OnboardScreen() {
   const [vendorModalVisible, setVendorModalVisible] = React.useState(false);
@@ -13,29 +14,44 @@ export function OnboardScreen() {
   const account = useAccount();
 
   const useOwnKeys = async () => {
-      // Get public key from private key input
-      const publicKey = "aaa11"
+    let keys = {
+      publicKey: "",
+      privateKey: ""
+    }
+    try {
+      keys = await validateAndGetKeys(privateKeyInput) as {
+        publicKey: string,
+        privateKey: string
+      };
+    } catch (error) {
+      Alert.alert("Error", "Your private key is invalid. Please try again.");
+    }
       
     await Promise.all([
-      await AsyncStorage.setItem('private', privateKeyInput),
-      await AsyncStorage.setItem('public', publicKey)
+      await AsyncStorage.setItem('private', keys?.privateKey),
+      await AsyncStorage.setItem('public', keys?.publicKey)
     ]);
 
 
     await firestore().collection("users").doc(account.address).set({
-      publicKey: publicKey
+      publicKey: keys?.publicKey
     });
   }
 
   const setupAutomatically = async () => {
-    // await Promise.all([
-    //   await AsyncStorage.setItem('private', privateKeyInput),
-    //   await AsyncStorage.setItem('public', privateKeyInput)
-    // ]);
+    const keys = await generateKeyPair() as {
+      publicKey: string,
+      privateKey: string
+    };
 
-    // await firestore().collection("users").doc(account.address).set({
-    //   publicKey: publicKeyInput
-    // });
+    await Promise.all([
+      await AsyncStorage.setItem('private', keys?.privateKey),
+      await AsyncStorage.setItem('public', keys?.publicKey)
+    ]);
+
+    await firestore().collection("users").doc(account.address).set({
+      publicKey: keys?.publicKey
+    });
   }
 
   return (

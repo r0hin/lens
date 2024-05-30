@@ -27,7 +27,6 @@ export function LoadingScreen() {
       })
     }
     else if (status == "disconnected") {
-      // Clear storage
       AsyncStorage.removeItem('public');
       AsyncStorage.removeItem('private');
     }
@@ -41,7 +40,6 @@ export function LoadingScreen() {
       if (userOnboarded == 1) {
         // Todo: authenticate if we dont have the keys in storage or if it doesnt match.
         navigation.navigate("Authenticate" as never);          
-
 
         // navigation.navigate("Main" as never);
       }

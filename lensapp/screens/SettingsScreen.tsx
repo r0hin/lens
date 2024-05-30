@@ -7,6 +7,8 @@ import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
 import Clipboard from '@react-native-clipboard/clipboard';
 import { W3mAccountButton, useWeb3Modal } from '@web3modal/wagmi-react-native';
+import { SETTINGS } from '../utils/settings';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function SettingsScreen() {
   const [score, setScore] = useState(0)
@@ -104,6 +106,55 @@ export function SettingsScreen() {
                 <Switch />
               </View>
             </View>
+            <TouchableOpacity onPress={async () => {
+              const publicKey = await AsyncStorage.getItem('public')
+              if (publicKey) {
+                Alert.alert("🔑 Public Key", publicKey)
+              }
+              else {
+                Alert.alert("Error", "No public key found.")
+              }
+            }}>
+              <View style={{ backgroundColor: "#121315", borderTopLeftRadius: 8, borderTopRightRadius: 8, padding: 12, width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 0 }}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View>
+                    <Text style={{ color: "white", fontSize: 14, fontWeight: 400 }}>View public key</Text>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                  <Icon name="unlock" size={16} color="white" />
+                </View>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={async () => {
+              let result;
+              if (SETTINGS.enableFaceID) result = await rnBiometrics.simplePrompt({ promptMessage: 'Authenticate with Face ID' });
+              else result = { success: true }
+              
+              if (result?.success) {
+                const privateKey = await AsyncStorage.getItem('private')
+                if (privateKey) {
+                  Alert.alert("🔑 Private Key", privateKey)
+                }
+                else {
+                  Alert.alert("Error", "No private key found.")
+                }
+              }
+              else {
+                Alert.alert("Error", "Biometric authentication failed.")
+              }
+            }}>
+              <View style={{ backgroundColor: "#121315", borderBottomLeftRadius: 8, borderBottomRightRadius: 8, padding: 12, width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <View>
+                    <Text style={{ color: "white", fontSize: 14, fontWeight: 400 }}>View private key</Text>
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                  <Icon name="lock" size={16} color="white" />
+                </View>
+              </View>
+            </TouchableOpacity>
           </View>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 24, width: "100%" }}>

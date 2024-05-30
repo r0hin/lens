@@ -15,20 +15,8 @@ export function HomeScreen() {
   const [addVendorInput, setAddVendorInput] = useState("")
   const rnBiometrics = new ReactNativeBiometrics()
 
-  const [publicKey, setPublicKey] = useState("")
-  const [privateKey, setPrivateKey] = useState("")
-
   const { disconnect } = useDisconnect();
   const account = useAccount();
-
-  useEffect(() => {
-    AsyncStorage.getItem('public').then((value) => {
-      setPublicKey(value as string)
-    })
-    AsyncStorage.getItem('private').then((value) => {
-      setPrivateKey(value as string)
-    })
-  }, [])
 
   const queryScore = () => {
     // using account.address
@@ -146,13 +134,6 @@ export function HomeScreen() {
             <Icon name="plus" size={16} color="white" />
             <Text style={{ color: "white", fontSize: 14, fontWeight: 500, marginLeft: 8 }}>Share with Creditor</Text>
           </TouchableOpacity>
-
-          <Text style={{color: "white"}}>
-            {publicKey}
-          </Text>
-          <Text style={{color: "white"}}>
-            {privateKey}
-          </Text>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 24, width: "100%" }}>
             <Text style={{ color: "#a3a3a3", fontSize: 14, textTransform: "uppercase", fontWeight: 400, paddingTop: 24 }}>
