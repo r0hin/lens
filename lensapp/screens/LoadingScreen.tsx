@@ -26,6 +26,11 @@ export function LoadingScreen() {
         }
       })
     }
+    else if (status == "disconnected") {
+      // Clear storage
+      AsyncStorage.removeItem('public');
+      AsyncStorage.removeItem('private');
+    }
 
     return () => unsubscribe();
   }, [status])
