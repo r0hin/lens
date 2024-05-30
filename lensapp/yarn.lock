@@ -8866,6 +8866,7 @@ __metadata:
     react: 18.2.0
     react-native: 0.74.1
     react-native-animated-nav-tab-bar: ^3.1.10
+    react-native-biometrics: ^3.0.1
     react-native-gesture-handler: ^2.16.2
     react-native-get-random-values: ^1.11.0
     react-native-mmkv: ^2.12.2
@@ -10706,6 +10707,15 @@ __metadata:
     react-native-screens: ^3.22.1
     styled-components: ^4.4.1
   checksum: 2cf0b474320eb9fb3583739ae5f0536c804ab40d11bfe5013792498179dff62c2028c985b97166a22caeb684d92f24ceb2ba9f14951db99071fd9191c7900d24
+  languageName: node
+  linkType: hard
+
+"react-native-biometrics@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "react-native-biometrics@npm:3.0.1"
+  peerDependencies:
+    react-native: ">=0.60.0"
+  checksum: 3864fea4bbf3dee1d360daf048e4f9980083c4e919e95082a5e4646e3b22475bb2b592cae18cccd7fb55b50498dca29e5346cf98d958646cbfc26fed5654bc53
   languageName: node
   linkType: hard
 

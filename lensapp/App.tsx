@@ -4,7 +4,13 @@ import '@walletconnect/react-native-compat'
 import { WagmiConfig } from 'wagmi'
 import { rootstock } from 'viem/chains'
 import { createWeb3Modal, defaultWagmiConfig, Web3Modal } from '@web3modal/wagmi-react-native'
-import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
+import {
+  AnimatedTabBarNavigator,
+  DotSize, // optional
+  TabElementDisplayOptions, // optional
+  TabButtonLayout, // optional
+  IAppearanceOptions // optional
+} from 'react-native-animated-nav-tab-bar'
 import {Appearance} from 'react-native';
 import { StatusBar } from 'react-native';
 import { HomeScreen } from './screens/Home';
@@ -14,8 +20,10 @@ import { TestScreen } from './screens/Test';
 import { createStackNavigator } from '@react-navigation/stack';
 import { LoginScreen } from './screens/Login';
 import { LoadingScreen } from './screens/LoadingScreen';
-
+import Icon from "react-native-vector-icons/Feather"
+import { SettingsScreen } from './screens/SettingsScreen';
 const queryClient = new QueryClient()
+
 
 function App(): React.JSX.Element {
   const chains = [rootstock]
@@ -66,9 +74,22 @@ function TabsComponent() {
   const Tabs = AnimatedTabBarNavigator();
 
   return (
-    <Tabs.Navigator appearance={{}}>
-      <Tabs.Screen name="User" component={HomeScreen} />
-      <Tabs.Screen name="Vendor" component={TestScreen} />
+    <Tabs.Navigator tabBarOptions={{
+      activeTintColor: 'white',
+      inactiveTintColor: 'grey',
+      activeBackgroundColor: 'black',
+      tabStyle: {
+        backgroundColor: '#121315',
+      }
+    }} appearance={{
+      whenInactiveShow: TabElementDisplayOptions.ICON_ONLY,
+      whenActiveShow: TabElementDisplayOptions.ICON_ONLY,
+      shadow: true,
+      floating: true,
+    }}>
+      <Tabs.Screen name="Credit" component={HomeScreen} options={{ tabBarIcon: ({ }) => ( <Icon name="home" size={17} color={"white"}/> ) }} />
+      <Tabs.Screen name="Cards" component={TestScreen} options={{ tabBarIcon: ({ }) => ( <Icon name="credit-card" size={17} color={"white"}/> ) }} />
+      <Tabs.Screen name="Settings" component={SettingsScreen} options={{ tabBarIcon: ({ }) => ( <Icon name="user" size={17} color={"white"}/> ) }} />
     </Tabs.Navigator>
   );
 }

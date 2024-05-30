@@ -11,9 +11,12 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		18A88C2B2C081B8D001025DE /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 18A88C172C081B8D001025DE /* Feather.ttf */; };
 		7CC1381DF0EF85882ED9FB91 /* libPods-lensapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CA76C0262AA52AFAC04EC56 /* libPods-lensapp.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8D37BD35ABB240AD933105C6 /* mono-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = B25C9E73CC8A4636BCB900AB /* mono-bold.otf */; };
 		9A9D2EC2DB52DA5D37CC777E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 007CDFDC96D6FB4259D32EFC /* PrivacyInfo.xcprivacy */; };
+		A7E0184374214A8D9138DE10 /* mono-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 959ACBEEA21B46E0B57A0113 /* mono-regular.otf */; };
 		F102F642C2B57248754B31B0 /* libPods-lensapp-lensappTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E623F7E2664B4C0F92D7DC61 /* libPods-lensapp-lensappTests.a */; };
 /* End PBXBuildFile section */
 
@@ -39,10 +42,13 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = lensapp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = lensapp/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = lensapp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		18A88C172C081B8D001025DE /* Feather.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Feather.ttf; sourceTree = "<group>"; };
 		5CA76C0262AA52AFAC04EC56 /* libPods-lensapp.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lensapp.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63F4EC3F9820FB5982428BC4 /* Pods-lensapp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lensapp.release.xcconfig"; path = "Target Support Files/Pods-lensapp/Pods-lensapp.release.xcconfig"; sourceTree = "<group>"; };
 		7F168D97B8CBF87240BA40FC /* Pods-lensapp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lensapp.debug.xcconfig"; path = "Target Support Files/Pods-lensapp/Pods-lensapp.debug.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lensapp/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		959ACBEEA21B46E0B57A0113 /* mono-regular.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mono-regular.otf"; path = "../assets/fonts/mono-regular.otf"; sourceTree = "<group>"; };
+		B25C9E73CC8A4636BCB900AB /* mono-bold.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "mono-bold.otf"; path = "../assets/fonts/mono-bold.otf"; sourceTree = "<group>"; };
 		C545FBA310DCBFE6F48A4CA3 /* Pods-lensapp-lensappTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lensapp-lensappTests.debug.xcconfig"; path = "Target Support Files/Pods-lensapp-lensappTests/Pods-lensapp-lensappTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E623F7E2664B4C0F92D7DC61 /* libPods-lensapp-lensappTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lensapp-lensappTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -89,6 +95,7 @@
 		13B07FAE1A68108700A75B9A /* lensapp */ = {
 			isa = PBXGroup;
 			children = (
+				18A88C272C081B8D001025DE /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -99,6 +106,15 @@
 				007CDFDC96D6FB4259D32EFC /* PrivacyInfo.xcprivacy */,
 			);
 			name = lensapp;
+			sourceTree = "<group>";
+		};
+		18A88C272C081B8D001025DE /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				18A88C172C081B8D001025DE /* Feather.ttf */,
+			);
+			name = Fonts;
+			path = "../node_modules/react-native-vector-icons/Fonts";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -127,6 +143,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				A33080B5B5834ABFBE4792AF /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -140,6 +157,15 @@
 				00E356EE1AD99517003FC87E /* lensappTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A33080B5B5834ABFBE4792AF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				959ACBEEA21B46E0B57A0113 /* mono-regular.otf */,
+				B25C9E73CC8A4636BCB900AB /* mono-bold.otf */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
@@ -247,8 +273,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				18A88C2B2C081B8D001025DE /* Feather.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				9A9D2EC2DB52DA5D37CC777E /* PrivacyInfo.xcprivacy in Resources */,
+				A7E0184374214A8D9138DE10 /* mono-regular.otf in Resources */,
+				8D37BD35ABB240AD933105C6 /* mono-bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -594,10 +623,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -669,10 +695,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
