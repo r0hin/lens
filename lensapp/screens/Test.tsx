@@ -20,7 +20,6 @@ export function TestScreen() {
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Text>VENDOR AREA</Text>
-
       <Text>Get user score</Text>
       <Text>User address:</Text>
       <TextInput

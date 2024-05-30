@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {useAccount, useDisconnect, useBalance, useWalletClient} from 'wagmi';
+import {
+  useAccount,
+  useDisconnect,
+  useBalance,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+} from 'wagmi';
 import {
   AsymmetricAgent,
   SymmetricAgent,
@@ -9,6 +16,7 @@ import {
   generateSymmetricKey,
   validateAndGetKeys,
 } from '../lib/crypto';
+import Lens from '../lib/contract';
 
 export function HomeScreen() {
   const [score, setScore] = useState(0);
@@ -25,8 +33,6 @@ export function HomeScreen() {
     address: account.address,
   });
 
-  const client = useWalletClient();
-
   const queryScore = () => {
     // using account.address
     setScore(score + 1);
@@ -41,6 +47,23 @@ export function HomeScreen() {
     // using account.address
     setReport('a');
   };
+
+  const {
+    data: dataAlg,
+    isError: isErrorAlg,
+    isLoading: isLoadingAlg,
+  } = useContractRead({
+    ...Lens,
+    functionName: 'getAlgorithm',
+  });
+
+  const {config} = usePrepareContractWrite({
+    ...Lens,
+    functionName: 'removeVendor',
+    args: ['0xfF01A49f2B81C67a50770a97F6f0d8E172a7e357'],
+  });
+
+  const {data, isLoading, isSuccess, write} = useContractWrite(config);
 
   //console.log('account', account);
   //console.log('balance', balance);
@@ -147,6 +170,16 @@ export function HomeScreen() {
         }}>
         <Text>Validate and Get Public Key, but it failes</Text>
       </TouchableOpacity>
+      <Text>{dataAlg}</Text>
+      <TouchableOpacity
+        onPress={async () => {
+          console.log('removing vendor');
+          write?.();
+          console.log('done calling');
+        }}>
+        <Text>Remove Vendor Call</Text>
+      </TouchableOpacity>
+      <Text>{isLoading ? 'Loading...' : 'Ready'}</Text>
     </View>
   );
 }

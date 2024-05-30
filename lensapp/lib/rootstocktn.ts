@@ -10,8 +10,16 @@ export const rootstockTestnet = defineChain({
     symbol: 'tRBTC',
   },
   rpcUrls: {
-    default: {http: ['https://public-node.testnet.rsk.co']},
-    public: {http: ['https://public-node.testnet.rsk.co']},
+    default: {
+      http: [
+        'https://rpc.testnet.rootstock.io/jj9L9SfWFinW5YZknxsFuPak8fMyTo-T',
+      ],
+    },
+    public: {
+      http: [
+        'https://rpc.testnet.rootstock.io/jj9L9SfWFinW5YZknxsFuPak8fMyTo-T',
+      ],
+    },
   },
   blockExplorers: {
     default: {
