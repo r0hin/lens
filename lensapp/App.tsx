@@ -5,7 +5,7 @@ import { WagmiConfig } from 'wagmi'
 import { mainnet, polygon, arbitrum } from 'viem/chains'
 import { createWeb3Modal, defaultWagmiConfig, Web3Modal } from '@web3modal/wagmi-react-native'
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar'
-
+import {Appearance} from 'react-native';
 import { StatusBar } from 'react-native';
 import { HomeScreen } from './screens/Home';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -37,9 +37,14 @@ function App(): React.JSX.Element {
     projectId,
     chains,
     wagmiConfig,
+    themeMode: "dark",
+    themeVariables: {
+      accent: "#5371FF",
+    },
     enableAnalytics: true // Optional - defaults to your Cloud configuration
   });
 
+  Appearance.setColorScheme("dark");
 
   return (
     <WagmiConfig config={wagmiConfig}>

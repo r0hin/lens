@@ -11,17 +11,15 @@ export function LoadingScreen() {
 
   useEffect(() => {
     if (address) {
-      Alert.alert("welcome");
       navigation.navigate("Main" as never);
     }
     else {
-      Alert.alert("no address");
       navigation.navigate("Login" as never);
     }
   })
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f2f2f2" }}>
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#000" }}>
       <Text>Loading</Text>
       {/* <TouchableOpacity onPress={onFinishLoading}>
         <Text>Finish loading</Text>
