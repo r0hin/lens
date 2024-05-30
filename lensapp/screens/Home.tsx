@@ -7,6 +7,7 @@ import {
   SymmetricAgent,
   generateKeyPair,
   generateSymmetricKey,
+  validateAndGetKeys,
 } from '../lib/crypto';
 
 export function HomeScreen() {
@@ -91,6 +92,7 @@ export function HomeScreen() {
         onPress={async () => {
           const keys = await generateKeyPair();
           setEncryptionKeys(keys);
+          console.log('Keys', keys);
         }}>
         <Text>Generate Keypair</Text>
       </TouchableOpacity>
@@ -124,6 +126,26 @@ export function HomeScreen() {
           console.log('Decrypted', decrypted);
         }}>
         <Text>Asymmetric Encrypt Decrypt Test</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={async () => {
+          const {privateKey} = encryptionKeys;
+          const publicKey = await validateAndGetKeys(privateKey);
+          console.log('Public Key', publicKey);
+        }}>
+        <Text>Validate and Get Public Key</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={async () => {
+          const privateKey = '---BEGIN---RANDOM SHIT';
+          // catch promise rejection
+          const publicKey = await validateAndGetKeys(privateKey).catch(err => {
+            console.log('bad priv key');
+          });
+        }}>
+        <Text>Validate and Get Public Key, but it failes</Text>
       </TouchableOpacity>
     </View>
   );

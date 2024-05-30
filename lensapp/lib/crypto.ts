@@ -1,5 +1,6 @@
 import QuickCrypto from 'react-native-quick-crypto';
 import Aes from 'react-native-aes-crypto';
+import forge from 'node-forge';
 
 // generate asymmetric key pair
 const generateKeyPair = () => {
@@ -15,8 +16,6 @@ const generateKeyPair = () => {
         privateKeyEncoding: {
           type: 'pkcs8',
           format: 'pem',
-          cipher: 'aes-256-cbc',
-          passphrase: '',
         },
       },
       (err, publicKey, privateKey) => {
@@ -90,7 +89,6 @@ class AsymmetricAgent {
         const decrypted = QuickCrypto.privateDecrypt(
           {
             key: this.privateKey,
-            passphrase: '',
           },
           Buffer.from(data, 'base64'),
         );
@@ -106,4 +104,29 @@ class AsymmetricAgent {
   }
 }
 
-export {generateKeyPair, generateSymmetricKey, SymmetricAgent, AsymmetricAgent};
+const validateAndGetKeys = async (priv: string): Promise<Object> => {
+  return new Promise((resolve, reject) => {
+    try {
+      var privateKey: any = forge.pki.privateKeyFromPem(priv);
+      var publicKey: any = forge.pki.setRsaPublicKey(
+        privateKey.n,
+        privateKey.e,
+      );
+      privateKey = forge.pki.privateKeyToPem(privateKey);
+      publicKey = forge.pki.publicKeyToPem(publicKey);
+      console.log('Public Key', publicKey);
+      resolve({publicKey, privateKey});
+    } catch (err) {
+      console.log(err);
+      reject("Couldn't validate the private key");
+    }
+  });
+};
+
+export {
+  generateKeyPair,
+  generateSymmetricKey,
+  SymmetricAgent,
+  AsymmetricAgent,
+  validateAndGetKeys,
+};
