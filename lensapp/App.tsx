@@ -24,6 +24,8 @@ import Icon from "react-native-vector-icons/Feather"
 import { SettingsScreen } from './screens/SettingsScreen';
 import { CardsScreen } from './screens/CardsScreen';
 import { VendorScreen } from './screens/VendorScreen';
+import { OnboardScreen } from './screens/OnboardScreen';
+import { AuthenticateScreen } from './screens/Authenticate';
 const queryClient = new QueryClient()
 
 
@@ -64,6 +66,8 @@ function App(): React.JSX.Element {
             <Stack.Screen name="Loading" component={LoadingScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Main" component={TabsComponent} />
+            <Stack.Screen name="Onboard" component={OnboardScreen} />
+            <Stack.Screen name="Authenticate" component={AuthenticateScreen} />
             <Stack.Screen name="Vendor" component={VendorScreen} />
           </Stack.Navigator>
         </NavigationContainer>
