@@ -3,7 +3,7 @@ import React from 'react';
 import '@walletconnect/react-native-compat';
 import {WagmiConfig} from 'wagmi';
 import {rootstock} from 'viem/chains';
-import {rootstockTestnet} from './lib/viem-rootstocktn';
+import {rootstockTestnet} from './lib/rootstocktn';
 import {
   createWeb3Modal,
   defaultWagmiConfig,
