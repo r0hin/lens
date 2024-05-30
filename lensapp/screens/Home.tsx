@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {View, Text, TextInput} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {useAccount, useDisconnect, useBalance, useWalletClient} from 'wagmi';
-import {testEncryptDecrypt} from '../lib/crypto';
 
 export function HomeScreen() {
   const [score, setScore] = useState(0);
@@ -78,22 +77,15 @@ export function HomeScreen() {
       </TouchableOpacity>
       <Text>report: {report}</Text>
       <TouchableOpacity
-        //onPress={() => {
-        //client.data.request({
-        //method: 'eth_decrypt',
-        //params: ['0x1c2b7e']
-
-        //});
-        //}}>
-        onPress={() => {
-          testEncryptDecrypt(
-            'A1c08e8343db594b8522D622838D4a57a21E4864',
-            '747a2fa5a6cfd842b74b97d6033d578c567e5305fd75d60ee757fdd81dd100a6',
-          );
+        onPress={async () => {
+          const data = await client.data.request({
+            method: 'eth_getEncryptionPublicKey',
+            params: [account.address],
+          });
+          console.log('data', data);
         }}>
         <Text>Test button</Text>
       </TouchableOpacity>
     </View>
   );
 }
-
