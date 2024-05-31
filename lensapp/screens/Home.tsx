@@ -153,6 +153,7 @@ export function HomeScreen() {
     const decryptedReports = await Promise.all(
       reports.map(async (report: string) => {
         const decrypted = await agent.decrypt(report);
+        console.log(decrypted);
         const parsed = parseReport(decrypted);
         console.log(parsed);
         return parsed;
@@ -222,10 +223,9 @@ export function HomeScreen() {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-
+    // Alert.alert('Refreshing', 'Refreshing your data...');
     refetchScore?.();
     refetchRecords?.();
-
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -528,7 +528,8 @@ export function HomeScreen() {
                   key={index} // @ts-ignore
                   vendor={report.vendorKey} // @ts-ignore
                   score={report.scoreDelta} // @ts-ignore
-                  date={report.timeAgoStr}
+                  date={report.timeAgoStr} // @ts-ignore
+                  remark={report.remark}
                 />
               );
             })}

@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import {VENDORS_8} from '../utils/settings';
 
 const ReportEntry = (props: any) => {
-  const {vendor, score, date} = props;
+  const {vendor, score, date, remark} = props;
 
   return (
     <View
@@ -42,7 +42,7 @@ const ReportEntry = (props: any) => {
             {VENDORS_8[vendor]?.name}
           </Text>
           <Text style={{color: '#a3a3a3', fontSize: 13, paddingTop: 4}}>
-            {date}
+            {remark} – {date}
           </Text>
         </View>
       </View>
