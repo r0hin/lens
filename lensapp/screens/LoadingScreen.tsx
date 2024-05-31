@@ -17,7 +17,7 @@ export function LoadingScreen() {
     if (status == "connected") {
       unsubscribe = firestore().collection("users").doc(address).onSnapshot(async (doc) => {
         if (doc.exists) {
-          await AsyncStorage.setItem('public', doc.data()?.publicKey)
+          await AsyncStorage.setItem(`${address}_public`, doc.data()?.publicKey)
 
           if (address == "0xfF01A49f2B81C67a50770a97F6f0d8E172a7e357") {
             setUserOnboarded(3); // 3 = vendor
@@ -31,10 +31,6 @@ export function LoadingScreen() {
           setUserOnboarded(0);
         }
       })
-    }
-    else if (status == "disconnected") {
-      AsyncStorage.removeItem('public');
-      AsyncStorage.removeItem('private');
     }
 
     return () => unsubscribe();
