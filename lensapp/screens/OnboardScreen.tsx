@@ -28,8 +28,8 @@ export function OnboardScreen() {
     }
       
     await Promise.all([
-      await AsyncStorage.setItem('private', keys?.privateKey),
-      await AsyncStorage.setItem('public', keys?.publicKey)
+      await AsyncStorage.setItem(`${account.address}_private`, keys?.privateKey),
+      await AsyncStorage.setItem(`${account.address}_public`, keys?.publicKey)
     ]);
 
 
@@ -45,8 +45,8 @@ export function OnboardScreen() {
     };
 
     await Promise.all([
-      await AsyncStorage.setItem('private', keys?.privateKey),
-      await AsyncStorage.setItem('public', keys?.publicKey)
+      await AsyncStorage.setItem(`${account.address}_private`, keys?.privateKey),
+      await AsyncStorage.setItem(`${account.address}_public`, keys?.publicKey)
     ]);
 
     await firestore().collection("users").doc(account.address).set({
