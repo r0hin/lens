@@ -8,8 +8,10 @@ import firestore from '@react-native-firebase/firestore';
 import { useAccount, useContractRead, usePrepareContractWrite, useContractWrite } from 'wagmi'
 import Lens from '../utils/contract'
 import { computeScore } from '../utils/credit';
-import Toast from 'react-native-root-toast';
+import { Notifier, Easing } from 'react-native-notifier';
+
 import { SETTINGS, VENDORS } from '../utils/settings';
+import { ToastComponent } from '../components/toast';
 
 export function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -79,8 +81,15 @@ export function HomeScreen() {
 
     const availableVendors = Object.keys(VENDORS)
     if (!availableVendors.includes(addVendorInput)) {
-      Toast.show
-      Alert.alert("Error", "Invalid vendor")
+      
+      Notifier.showNotification({
+        description: 'No trusted creditor found!',
+        Component: (props) => ToastComponent(props?.title || "", props?.description || ""),
+        duration: 4000, showAnimationDuration: 749, showEasing: Easing.ease, hideOnPress: true
+      });
+
+      setVendorModalVisible(false)
+
       return
     }
 
@@ -97,7 +106,11 @@ export function HomeScreen() {
         approved: firestore.FieldValue.arrayUnion(addVendorInput),
       });
 
-      Alert.alert("Success", "We sent the transaction to your wallet!")
+      Notifier.showNotification({
+        description: 'Transaction sent!',
+        Component: (props) => ToastComponent(props?.title || "", props?.description || ""),
+        duration: 4000, showAnimationDuration: 749, showEasing: Easing.ease, hideOnPress: true
+      });
       setVendorModalVisible(false)
     }
     else {

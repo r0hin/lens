@@ -15,7 +15,7 @@ export function SettingsScreen() {
   const [report, setReport] = useState("")
   const [modalVisible, setModalVisible] = useState(false);
   const [vendorModalVisible, setVendorModalVisible] = useState(false);
-  const [addVendorInput, setAddVendorInput] = useState("")
+  const [privateKeyInput, setPrivateKeyInput] = useState("")
   const rnBiometrics = new ReactNativeBiometrics()
 
   const account = useAccount();
@@ -24,19 +24,6 @@ export function SettingsScreen() {
   });
 
   const { open, close } = useWeb3Modal();
-
-  const addVendor = () => {
-    rnBiometrics.simplePrompt({ promptMessage: "Confirm credit share" }).then((result) => {
-      if (result.success) {
-        Alert.alert("Success", "Credit score to be shared with vendor")
-      }
-      else {
-        Alert.alert("Error", "Biometric authentication failed")
-      }
-    }).catch((err) => {
-      Alert.alert("Error", "Biometric authentication failed")
-    })
-  }
 
   return (
     <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "flex-start", backgroundColor: "#000" }}>
@@ -151,6 +138,13 @@ export function SettingsScreen() {
               </View>
             </TouchableOpacity>
           </View>
+
+            <TextInput numberOfLines={3} multiline={true} style={{ backgroundColor: "#121315", borderRadius: 8, padding: 12, width: "100%", color: "white", fontSize: 14, fontWeight: 400, marginBottom: 12 }} placeholder="set private key box lol" value={privateKeyInput} onChangeText={setPrivateKeyInput} />
+
+          <TouchableOpacity onPress={() => {
+            // To set the priate key
+            AsyncStorage.setItem(`${account.address}_private`, privateKeyInput)            
+          }}><Text style={{color: "white"}}>Okconfirm button</Text></TouchableOpacity>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 24, width: "100%" }}>
             <Text style={{ color: "#a3a3a3", fontSize: 14, textTransform: "uppercase", fontWeight: 400, paddingTop: 24 }}>

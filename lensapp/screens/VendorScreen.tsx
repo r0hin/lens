@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useAccount, useContractRead, useContractWrite} from 'wagmi';
 import Lens from '../utils/contract';
 import firestore from '@react-native-firebase/firestore';
+import { Notifier, Easing } from 'react-native-notifier';
 import {
   generateSymmetricKey,
   AsymmetricAgent,
@@ -27,6 +28,7 @@ import {masterKey} from '../utils/settings';
 
 import {computeScore} from '../utils/credit';
 import {decrypt} from 'react-native-aes-crypto';
+import { ToastComponent } from '../components/toast';
 
 export function VendorScreen() {
   const [lookupInput, setLookupInput] = useState('');
@@ -148,7 +150,11 @@ export function VendorScreen() {
       .update({
         incomingRequests: firestore.FieldValue.arrayUnion(account.address),
       });
-    Alert.alert('Success', 'Request sent!');
+    Notifier.showNotification({
+      description: 'Request sent!',
+      Component: (props) => ToastComponent(props?.title || "", props?.description || ""),
+      duration: 4000, showAnimationDuration: 749, showEasing: Easing.ease, hideOnPress: true
+    });
   };
 
   // with appendScoreInput
