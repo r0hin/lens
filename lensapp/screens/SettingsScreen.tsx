@@ -101,7 +101,7 @@ export function SettingsScreen() {
               </View>
             </View>
             <TouchableOpacity onPress={async () => {
-              const publicKey = await AsyncStorage.getItem('public')
+              const publicKey = await AsyncStorage.getItem(`${account.address}_public`)
               if (publicKey) {
                 Alert.alert("🔑 Public Key", publicKey)
               }
@@ -126,7 +126,7 @@ export function SettingsScreen() {
               else result = { success: true }
               
               if (result?.success) {
-                const privateKey = await AsyncStorage.getItem('private')
+                const privateKey = await AsyncStorage.getItem(`${account.address}_private`)
                 if (privateKey) {
                   Alert.alert("🔑 Private Key", privateKey)
                 }

@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AsymmetricAgent, SymmetricAgent } from "../utils/crypto"
 
-export function computeScore(encryptedScore: string, encryptedAccessToken: string) {
+export function computeScore(encryptedScore: string, encryptedAccessToken: string, address: string) {
   return new Promise(async (resolve, reject) => {
     // 1. decrypt encryptedAccessToken with user private key
-    const privateKey = await AsyncStorage.getItem('private');
-    const publicKey = await AsyncStorage.getItem('public');
+    const privateKey = await AsyncStorage.getItem(`${address}private`);
+    const publicKey = await AsyncStorage.getItem(`${address}_public`);
 
     let accessToken = "";
 

@@ -8,6 +8,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useAccount, useContractRead, usePrepareContractWrite, useContractWrite } from 'wagmi'
 import Lens from '../utils/contract'
 import { computeScore } from '../utils/credit';
+import Toast from 'react-native-root-toast';
 import { SETTINGS, VENDORS } from '../utils/settings';
 
 export function HomeScreen() {
@@ -31,6 +32,7 @@ export function HomeScreen() {
     const listener = firestore().collection("users").doc(account.address).onSnapshot((snapshot) => {
       setIncomingRequests(snapshot.data()?.incomingRequests || [])
       setApproved(snapshot.data()?.approved || [])
+      console.log(snapshot.data()?.approved)
     });
 
     return () => listener();
@@ -67,20 +69,33 @@ export function HomeScreen() {
 
   const getScore = async () => {
     refetchScore?.(); // @ts-ignore
-    const result = await computeScore(dataScore, dataToken) as string
+    const result = await computeScore(dataScore, dataToken, account.address) as string
     setScore(result)
+    console.log(result)
   }
 
   const addVendor = async () => {
     let result;
+
+    const availableVendors = Object.keys(VENDORS)
+    if (!availableVendors.includes(addVendorInput)) {
+      Toast.show
+      Alert.alert("Error", "Invalid vendor")
+      return
+    }
+
     if (SETTINGS.enableFaceID) result = await rnBiometrics.simplePrompt({ promptMessage: 'Authenticate with Face ID' });
     else result = { success: true }
 
     if (result.success) { // Add vendor, abi call
-
       writeVendor?.({
         args: [addVendorInput],
       })
+
+      await firestore().collection("users").doc(account.address).update({
+        incomingRequests: firestore.FieldValue.arrayRemove(addVendorInput),
+        approved: firestore.FieldValue.arrayUnion(addVendorInput),
+      });
 
       Alert.alert("Success", "We sent the transaction to your wallet!")
       setVendorModalVisible(false)
@@ -133,7 +148,7 @@ export function HomeScreen() {
                 marginTop: 12,
                 color: "white",
                 width: "100%"
-              }} placeholder="0x" placeholderTextColor="#a3a3a3" onChangeText={(text) => setAddVendorInput(text)} />
+              }} placeholder="0x" placeholderTextColor="#a3a3a3" value={addVendorInput} onChangeText={(text) => setAddVendorInput(text)} />
 
               <View style={{ flexDirection: "row" }}>
                 <View style={{ flex: 1 }}>
@@ -243,10 +258,38 @@ export function HomeScreen() {
           </View>
 
           <Text style={{ color: "#a3a3a3", fontSize: 14, textTransform: "uppercase", fontWeight: 400, paddingTop: 24 }}>
-            Creditors
+            {
+              incomingRequests.length && approved.length ? "Creditors & Requests" : (incomingRequests.length ? "Creditors" : (approved.length ? "Requests" : "No creditors or requests"))
+            }
           </Text>
 
           <View style={{ flexDirection: "column", alignItems: "center", paddingTop: 12, width: "100%" }}>
+            {
+              approved.map((vendor, index) => {
+                return (
+                  <View key={index} style={{ backgroundColor: "#121315", borderRadius: 8, padding: 12, width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <View style={{
+                        backgroundColor: "#5371FF",
+                        borderRadius: 4,
+                        width: 42,
+                        height: 42,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: 16,
+                      }}>
+                        <Icon style={{}} name={(VENDORS[vendor] as any).icon} size={22} color="white" />
+                      </View>
+                      <View>
+                        <Text style={{ color: "white", fontSize: 16, fontWeight: 500 }}>{(VENDORS[vendor] as any).name}</Text>
+                        <Text style={{ color: "#a3a3a3", fontSize: 13, paddingTop: 4 }}>Access granted</Text>
+                      </View>
+                    </View>
+                  </View>
+                )
+              })
+            }
             {
               incomingRequests.map((request, index) => {
                 return (
@@ -262,48 +305,22 @@ export function HomeScreen() {
                         alignItems: 'center',
                         marginRight: 16,
                       }}>
-                        <Icon style={{}} name="user" size={22} color="black" />
+                        <Icon style={{}} name={(VENDORS[request] as any).icon} size={22} color="black" />
                       </View>
                       <View>
                         <Text style={{ color: "white", fontSize: 16, fontWeight: 500 }}>{(VENDORS[request] as any).name}</Text>
-                        <Text style={{ color: "#a3a3a3", fontSize: 13, paddingTop: 4 }}>Requested access to your credit score</Text>
+                        <Text style={{ color: "#a3a3a3", fontSize: 13, paddingTop: 4 }}>Requested access</Text>
                       </View>
                     </View>
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                      <TouchableOpacity onPress={() => {
-                        setModalVisible(true)
-                      }}>
-                        <Text style={{ color: "#5371FF", fontSize: 16, marginRight: 8 }}>Accept</Text>
+                      <TouchableOpacity onPress={() => { setVendorModalVisible(true); setAddVendorInput(request) }} style={{ backgroundColor: "#121315", padding: 12, borderRadius: 6 }}>
+                        <Icon name="check" size={16} color="white" />
                       </TouchableOpacity>
-                      <Text style={{ color: "red", fontSize: 16, marginRight: 8 }}>Deny</Text>
                     </View>
                   </View>
                 )
               })
             }
-            <View style={{ backgroundColor: "#121315", borderRadius: 8, padding: 12, width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <View style={{
-                  backgroundColor: "#000",
-                  borderRadius: 4,
-                  width: 42,
-                  height: 42,
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 16,
-                }}>
-                  <Icon style={{}} name="target" size={22} color="white" />
-                </View>
-                <View>
-                  <Text style={{ color: "white", fontSize: 16, fontWeight: 500 }}>Target</Text>
-                  <Text style={{ color: "#a3a3a3", fontSize: 13, paddingTop: 4 }}>Connected 9 weeks ago</Text>
-                </View>
-              </View>
-              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                <Icon name="chevron-right" size={16} color="#a3a3a3" />
-              </View>
-            </View>
           </View>
         </SafeAreaView>
       </ScrollView>

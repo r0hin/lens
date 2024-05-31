@@ -117,12 +117,13 @@ export function VendorScreen() {
       .get();
     const approved = targetDoc.data()?.approved || [];
 
-    if (dataToken == undefined || !approved.includes(account.address)) {
+    if (!approved.includes(account.address) ) {
       setCanAccess(false);
       setLooked(true);
-      return;
-    } else {
-      setCanAccess(true);
+    }
+    else {
+      setCanAccess(true)
+      setLooked(true)
     }
 
     // use masterkey to unlock decryption key
