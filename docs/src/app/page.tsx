@@ -1,5 +1,6 @@
 import Image from "next/image";
 import logo from "./logo.png";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -11,15 +12,21 @@ export default function Home() {
           Lens is a better way to prove trust.
         </h1>
         <div className="flex justify-center items-center">
-          <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#404040] text-[#a3a3a3]">
-            Demo
-          </button>
-          <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#5371FF] text-[#a3a3a3]">
-            White Paper
-          </button>
-          <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#404040] text-[#a3a3a3]">
-            Contact
-          </button>
+          <Link href={"https://forms.gle/XCwJU4YBMJgELnnB7"}>
+            <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#404040] text-[#a3a3a3]">
+              Demo
+            </button>
+          </Link>
+          <Link href={"https://projectlens.xyz/paper.pdf"}>
+            <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#5371FF] text-[#a3a3a3]">
+              White Paper
+            </button>
+          </Link>
+          <Link href={"mailto:hi@projectlens.xyz"}>
+            <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#404040] text-[#a3a3a3]">
+              Contact
+            </button>
+          </Link>
         </div>
       </div>
     </main>

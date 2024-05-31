@@ -1,5 +1,5 @@
 export const SETTINGS = {
-  enableFaceID: true,
+  enableFaceID: false,
 };
 
 export const VENDORS = {
