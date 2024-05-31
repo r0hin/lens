@@ -2,14 +2,21 @@ import Toast from 'react-native-root-toast';
 
 export const SETTINGS = {
   enableFaceID: false,
-}
+};
 
 export const VENDORS = {
-  "0xfF01A49f2B81C67a50770a97F6f0d8E172a7e357": {
+  '0xfF01A49f2B81C67a50770a97F6f0d8E172a7e357': {
     name: "Jefferson's Real Coffee Shop",
-    icon: "coffee"
-  }
-}
+    icon: 'coffee',
+  },
+};
+
+export const VENDORS_8 = {
+  '72a7e357': {
+    name: 'American Express',
+    logo: 'credit-card',
+  },
+};
 
 export const TOAST_SETTINGS = {
   duration: Toast.durations.LONG,
@@ -18,6 +25,8 @@ export const TOAST_SETTINGS = {
   animation: true,
   hideOnPress: true,
   delay: 0,
-}
+};
 
-export const masterKey = "0d357908127b0fcaa98adf5895ad5a99c39b5be69d2931c32d01ec3cc9828275"
+export const masterKey =
+  '0d357908127b0fcaa98adf5895ad5a99c39b5be69d2931c32d01ec3cc9828275';
+

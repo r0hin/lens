@@ -7,6 +7,7 @@ import {
   Pressable,
   Alert,
   Image,
+  Switch as SwitchComponent,
 } from 'react-native';
 import {
   ScrollView,
@@ -24,6 +25,7 @@ import {
   SymmetricAgent,
 } from '../utils/crypto';
 import {masterKey} from '../utils/settings';
+import {generateReport} from '../utils/report';
 
 import {computeScore} from '../utils/credit';
 import {decrypt} from 'react-native-aes-crypto';
@@ -35,6 +37,8 @@ export function VendorScreen() {
   const [appendScoreInput, setAppendScoreInput] = useState('');
   const [recordInput, setRecordInput] = useState('');
   const [userScore, setUserScore] = useState('0');
+  const [usageRatio, setUsageRatio] = useState('');
+  const [isPayed, setIsPayed] = useState(false);
   const account = useAccount();
 
   const {
@@ -117,15 +121,16 @@ export function VendorScreen() {
       .get();
     const approved = targetDoc.data()?.approved || [];
 
-    if (!approved.includes(account.address) ) {
+    if (!approved.includes(account.address)) {
       setCanAccess(false);
       setLooked(true);
+    } else {
+      setCanAccess(true);
+      setLooked(true);
     }
-    else {
-      setCanAccess(true)
-      setLooked(true)
+    if (!dataScore || !dataToken) {
+      return;
     }
-
     // use masterkey to unlock decryption key
     const symAgent = new SymmetricAgent(masterKey);
     // @ts-ignore
@@ -137,7 +142,7 @@ export function VendorScreen() {
     // @ts-ignore
     let [cypher2, iv2] = dataScore?.split(':');
     const decryptedScore = await symAgent2.decrypt(cypher2, iv2);
-    setUserScore(decryptedScore);
+    setUserScore(decryptedScore?.toString() || '0');
   };
 
   const requestAccess = async () => {
@@ -153,6 +158,14 @@ export function VendorScreen() {
 
   // with appendScoreInput
   const appendScore = async () => {
+    const message = generateReport(
+      new Date(),
+      account.address,
+      appendScoreInput,
+      isPayed,
+      usageRatio,
+      recordInput,
+    );
     // const agent = new SymmetricAgent(masterKey)
     // const cypher = "/9KQYJJqjk1IQxC/8drD5A=="
     // const iv = "1e5ea667c40699ab5cc73781a02aa437"
@@ -221,7 +234,7 @@ export function VendorScreen() {
     }
     //5. write the encrypted score, encrypted userToken and encrypted vendorToken to the chain.
     // console.log(`unencrypted record: ${recordInput}`, `unencrypted new score: ${newScore}`, `unencrypted userToken: should be same as unencrypted vendor`, `unencrypted vendorToken: ${decryptedVendorToken || ""}`)
-    const encryptedRecord = await asymAgent.encrypt(recordInput);
+    const encryptedRecord = await asymAgent.encrypt(message);
     let encryptedNewScore: any = await symAgent2.encrypt(newScore.toString());
     encryptedNewScore = `${encryptedNewScore.cipher}:${encryptedNewScore.iv}`;
 
@@ -406,11 +419,11 @@ export function VendorScreen() {
                     fontWeight: 400,
                     paddingTop: 24,
                   }}>
-                  Append
+                  Add Report
                 </Text>
               </View>
               <TextInput
-                keyboardType="number-pad"
+                keyboardType="numbers-and-punctuation"
                 style={{
                   borderColor: '#121315',
                   borderWidth: 2,
@@ -420,7 +433,7 @@ export function VendorScreen() {
                   color: 'white',
                   width: '100%',
                 }}
-                placeholder="+/-"
+                placeholder="+/- Score"
                 placeholderTextColor="gray"
                 value={appendScoreInput}
                 onChangeText={text => setAppendScoreInput(text)}
@@ -435,11 +448,56 @@ export function VendorScreen() {
                   color: 'white',
                   width: '100%',
                 }}
-                placeholder="Report"
+                placeholder="Remark (optional)"
                 placeholderTextColor="gray"
                 value={recordInput}
-                onChangeText={text => setRecordInput(text)}
+                onChangeText={text => {
+                  if (text.length < 32) {
+                    setRecordInput(text.toUpperCase());
+                  }
+                }}
               />
+              <Text
+                style={{
+                  color: '#a3a3a3',
+                  fontSize: 14,
+                  textTransform: 'uppercase',
+                  fontWeight: 400,
+                  paddingTop: 24,
+                }}>
+                Payment In Full?
+              </Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}>
+                <TextInput
+                  keyboardType="number-pad"
+                  style={{
+                    borderColor: '#121315',
+                    borderWidth: 2,
+                    padding: 12,
+                    borderRadius: 8,
+                    marginTop: 12,
+                    color: 'white',
+                    width: '80%',
+                  }}
+                  placeholder="Utilization Ratio"
+                  placeholderTextColor="gray"
+                  value={usageRatio}
+                  onChangeText={text => setUsageRatio(text)}
+                />
+                <SwitchComponent
+                  trackColor={{false: '#767577', true: '#81b0ff'}}
+                  thumbColor={isPayed ? '#f4f4f4' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={setIsPayed}
+                  value={isPayed}
+                />
+              </View>
               <TouchableOpacity
                 style={{
                   backgroundColor: '#5371FF',
@@ -462,4 +520,3 @@ export function VendorScreen() {
     </View>
   );
 }
-
