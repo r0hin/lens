@@ -128,8 +128,8 @@ export function SettingsScreen() {
               if (result?.success) {
                 const privateKey = await AsyncStorage.getItem(`${account.address}_private`)
                 if (privateKey) {
-                  Alert.alert("🔑 Private Key", privateKey)
                   Clipboard.setString(privateKey)
+                  Alert.alert("🔑 Private Key", privateKey)
                 }
                 else {
                   Alert.alert("Error", "No private key found.")
