@@ -4,7 +4,7 @@ type WagmiContract = {
 };
 
 const Lens: WagmiContract = {
-  address: '0x521Bef98b1D5D2FEC16a629a0311075E7EC7732b',
+  address: '0x22DED017eBb8F47B24804d8e098379Af9a132f0e',
   abi: [
 	{
 		"inputs": [

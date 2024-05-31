@@ -4,20 +4,22 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import ReactNativeBiometrics from 'react-native-biometrics'
+import firestore from '@react-native-firebase/firestore';
 import { useAccount, useContractRead, usePrepareContractWrite, useContractWrite } from 'wagmi'
 import Lens from '../utils/contract'
 import { computeScore } from '../utils/credit';
-import { SETTINGS } from '../utils/settings';
+import { SETTINGS, VENDORS } from '../utils/settings';
 
 export function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [vendorModalVisible, setVendorModalVisible] = useState(false);
+  const [incomingRequests, setIncomingRequests] = useState([]);
+  const [approved, setApproved] = useState([]);
   const rnBiometrics = new ReactNativeBiometrics()
   
   const [addVendorInput, setAddVendorInput] = useState("")
   const [score, setScore] = useState("N/A")
   const account = useAccount();
-
 
   const {data:dataVendor, isLoading:isLoadingVendor, isSuccess: isSuccessVendor, write: writeVendor} = useContractWrite({
     ...Lens,
@@ -25,17 +27,28 @@ export function HomeScreen() {
   });
 
   
+  useEffect(() => {
+    const listener = firestore().collection("users").doc(account.address).onSnapshot((snapshot) => {
+      setIncomingRequests(snapshot.data()?.incomingRequests || [])
+      setApproved(snapshot.data()?.approved || [])
+    });
+
+    return () => listener();
+  }, [])
+
   const {
     data: dataScore,
     isError: isErrorScore,
     isLoading: isLoadingScore,
+    refetch: refetchScore,
   } = useContractRead({
     ...Lens,
     functionName: 'getCreditScore',
     args: [account.address],
+    enabled: false,
   });
 
-    const {
+  const {
     data: dataToken,
     isError: isErrorToken,
     isLoading: isLoadingToken,
@@ -48,11 +61,12 @@ export function HomeScreen() {
 
   useEffect(() => {
     // @ts-ignore
-    getScore(dataScore, dataToken)
+    refetchScore?.();
+    getScore()
   }, [dataScore, dataToken])
 
-  const getScore = async (dataScore: string, dataToken: string) => {
-    console.log("CALLING")
+  const getScore = async () => {
+    refetchScore?.(); // @ts-ignore
     const result = await computeScore(dataScore, dataToken) as string
     setScore(result)
   }
@@ -80,6 +94,7 @@ export function HomeScreen() {
     <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "flex-start", backgroundColor: "#000" }}>
       <ScrollView style={{ width: "100%" }}>
         <SafeAreaView style={{ padding: 12 }}>
+          
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "flex-end", paddingTop: 24, width: "100%" }}>
             {/* Gradient text */}
             <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>{score}</Text>
@@ -228,10 +243,44 @@ export function HomeScreen() {
           </View>
 
           <Text style={{ color: "#a3a3a3", fontSize: 14, textTransform: "uppercase", fontWeight: 400, paddingTop: 24 }}>
-            Connected Creditors
+            Creditors
           </Text>
 
           <View style={{ flexDirection: "column", alignItems: "center", paddingTop: 12, width: "100%" }}>
+            {
+              incomingRequests.map((request, index) => {
+                return (
+                  <View key={index} style={{ borderColor: "#121315", borderWidth:3, borderStyle: "dotted", borderRadius: 8, padding: 12, width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <View style={{
+                        backgroundColor: "white",
+                        borderRadius: 4,
+                        width: 42,
+                        height: 42,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginRight: 16,
+                      }}>
+                        <Icon style={{}} name="user" size={22} color="black" />
+                      </View>
+                      <View>
+                        <Text style={{ color: "white", fontSize: 16, fontWeight: 500 }}>{(VENDORS[request] as any).name}</Text>
+                        <Text style={{ color: "#a3a3a3", fontSize: 13, paddingTop: 4 }}>Requested access to your credit score</Text>
+                      </View>
+                    </View>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                      <TouchableOpacity onPress={() => {
+                        setModalVisible(true)
+                      }}>
+                        <Text style={{ color: "#5371FF", fontSize: 16, marginRight: 8 }}>Accept</Text>
+                      </TouchableOpacity>
+                      <Text style={{ color: "red", fontSize: 16, marginRight: 8 }}>Deny</Text>
+                    </View>
+                  </View>
+                )
+              })
+            }
             <View style={{ backgroundColor: "#121315", borderRadius: 8, padding: 12, width: "100%", flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <View style={{

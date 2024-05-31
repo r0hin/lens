@@ -10,6 +10,7 @@ import {generateSymmetricKey, AsymmetricAgent, SymmetricAgent} from '../utils/cr
 import { masterKey } from '../utils/settings';
 
 import { computeScore } from '../utils/credit'
+import { decrypt } from 'react-native-aes-crypto';
 
 export function VendorScreen() {
   const [lookupInput, setLookupInput] = useState("")
@@ -17,6 +18,7 @@ export function VendorScreen() {
   const [looked, setLooked] = useState(false)
   const [appendScoreInput, setAppendScoreInput] = useState("")
   const [recordInput, setRecordInput] = useState("")
+  const account = useAccount();
 
   const {
     data: dataAlg,
@@ -35,7 +37,7 @@ export function VendorScreen() {
     refetch: refetchScore
   } = useContractRead({
     ...Lens,
-    args: [],
+    args: [lookupInput],
     functionName: 'getCreditScore',
     enabled: false,
   });
@@ -77,7 +79,7 @@ export function VendorScreen() {
   // }
   // , [dataAlg])
 
-  const lookupCredit = () => {
+  const lookupCredit = async () => {
     // Access the user
     // setCanAccess(true)
     // setLooked(true)
@@ -86,46 +88,43 @@ export function VendorScreen() {
 
     refetchToken?.()
     refetchUserToken?.()
+    refetchScore?.()
 
-    if (dataToken == undefined) {
+    const targetDoc = await firestore().collection("users").doc(lookupInput).get()
+    const approved = targetDoc.data()?.approved || [];
+
+    if (dataToken == undefined || !approved.includes(account.address) ) {
       setCanAccess(false);
       setLooked(true);
     }
-
-    console.log(lookupInput)
-
-    setCanAccess(true)
-
-    console.log(typeof dataToken)
-    console.log(dataToken)
-    // @ts-ignore
-  //   computeScore(dataScore, dataToken).then((res) => {
-  //     console.log(res)
-  //     if (res) {
-  //       setCanAccess(true)
-  //       setLooked(true)
-  //     } else {
-  //       setCanAccess(false)
-  //       setLooked(true)
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     console.log(err)
-  //     setCanAccess(false)
-  //     setLooked(true)
-  // })
+    else {
+      setCanAccess(true)
+    }
 }
 
-  const requestAccess = () => {
-    
+  const requestAccess = async () => {
+    const targetAddress = lookupInput
+    await firestore().collection("users").doc(targetAddress).update({
+      incomingRequests: firestore.FieldValue.arrayUnion(account.address)
+    });
+    Alert.alert("Success", "Request sent!")
   }
 
   // with appendScoreInput
   const appendScore = async () => {
+
+    // const agent = new SymmetricAgent(masterKey)
+    // const cypher = "/9KQYJJqjk1IQxC/8drD5A=="
+    // const iv = "1e5ea667c40699ab5cc73781a02aa437"
+    // const decrypted = await agent.decrypt(cypher, iv)
+    // console.log(decrypted)
+
+    // return
     // @ts-ignore
     let encryptedUserToken: any = dataUserToken // @ts-ignore
     let encryptedVendorToken: any = dataToken
     let symAgent2;
+    let decryptedVendorToken
     let scoreDelta;
     
     try {
@@ -140,19 +139,27 @@ export function VendorScreen() {
     // 1. get the users public key from firebase using their address
     const document = await firestore().collection("users").doc(lookupInput).get();
     const publicKey = document.data()?.publicKey;
+
+    // these two agents unlocks the key to unlock Symagent2
     const asymAgent = new AsymmetricAgent(publicKey, "")
     const symAgent = new SymmetricAgent(masterKey)
 
+    // console.log(dataToken, dataScore)
+    // return
     // 2. if the user has no score, generate a new set of AES keys
     if (!dataToken && !dataScore) {
-      const newKey = await generateSymmetricKey(publicKey, publicKey, 256, 32)
+    // if (!dataToken && !dataScore || true) {
+      const newKey = await generateSymmetricKey(publicKey, publicKey, 256, 192)
+      console.log("unencryped vendor token sub:", newKey)
     // 2.1 encrypt the accessKey with user public key
 
       encryptedUserToken = await asymAgent.encrypt(newKey)
       
     // 2.2 encrypt the AES key with a masterToken 
-      encryptedVendorToken = await symAgent.encrypt(appendScoreInput)
+      encryptedVendorToken = await symAgent.encrypt(newKey)
       encryptedVendorToken = `${encryptedVendorToken.cipher}:${encryptedVendorToken.iv}`
+
+      // SymAgent2 unlocks score
       symAgent2 = new SymmetricAgent(newKey)
     }
 /******************BELOW IS UNTESTED ****************/
@@ -160,7 +167,8 @@ export function VendorScreen() {
       //3. if the user already has a score, decrypte the vendorToken using the master key
       // @ts-ignore
       const [cypher, iv] = (dataToken)?.split(":")
-      const decryptedVendorToken = await symAgent.decrypt(cypher, iv)
+      decryptedVendorToken = await symAgent.decrypt(cypher, iv)
+      console.log("BLACK", decryptedVendorToken)
       //3.1 useVendorToken to decrypt the score
       symAgent2 = new SymmetricAgent(decryptedVendorToken)
       // @ts-ignore
@@ -170,6 +178,7 @@ export function VendorScreen() {
       newScore = parseInt(decryptedScore) + scoreDelta
     }
     //5. write the encrypted score, encrypted userToken and encrypted vendorToken to the chain.
+    // console.log(`unencrypted record: ${recordInput}`, `unencrypted new score: ${newScore}`, `unencrypted userToken: should be same as unencrypted vendor`, `unencrypted vendorToken: ${decryptedVendorToken || ""}`)
     const encryptedRecord = await asymAgent.encrypt(recordInput)
     let encryptedNewScore:any = await symAgent2.encrypt(newScore.toString())
     encryptedNewScore = `${encryptedNewScore.cipher}:${encryptedNewScore.iv}`
@@ -177,6 +186,7 @@ export function VendorScreen() {
 
     console.log("lookupInput", lookupInput, "\nencryptedRecord", encryptedRecord, "\nnewScore", encryptedNewScore, "\nencryptedUserToken", encryptedUserToken, "\nencryptedVendorToken", encryptedVendorToken)
 
+    console.log('sent')
     writeCreditReport?.({
       args: [lookupInput, encryptedRecord, encryptedNewScore, encryptedUserToken, encryptedVendorToken]
     });
