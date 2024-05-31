@@ -290,36 +290,6 @@ export function SettingsScreen() {
               </View>
             </TouchableOpacity>
           </View>
-
-          <TextInput
-            numberOfLines={3}
-            multiline={true}
-            style={{
-              backgroundColor: '#121315',
-              borderRadius: 8,
-              padding: 12,
-              width: '100%',
-              color: 'white',
-              fontSize: 14,
-              fontWeight: 400,
-              marginBottom: 12,
-            }}
-            placeholder="set private key box lol"
-            value={privateKeyInput}
-            onChangeText={setPrivateKeyInput}
-          />
-
-          <TouchableOpacity
-            onPress={() => {
-              // To set the priate key
-              AsyncStorage.setItem(
-                `${account.address}_private`,
-                privateKeyInput,
-              );
-            }}>
-            <Text style={{color: 'white'}}>Okconfirm button</Text>
-          </TouchableOpacity>
-
           <View
             style={{
               flexDirection: 'row',

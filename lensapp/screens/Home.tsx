@@ -124,7 +124,8 @@ export function HomeScreen() {
 
   const getScore = async () => {
     refetchScore?.(); // @ts-ignore
-    const result = (await computeScore( // @ts-ignore
+    const result = (await computeScore(
+      // @ts-ignore
       dataScore,
       dataToken,
       account.address,
@@ -434,10 +435,9 @@ export function HomeScreen() {
 
           <View
             style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
+              flexDirection: 'column',
               alignItems: 'center',
-              paddingTop: 24,
+              paddingTop: 12,
               width: '100%',
             }}>
             <TouchableOpacity
@@ -447,10 +447,8 @@ export function HomeScreen() {
                 borderStyle: 'dotted',
                 padding: 12,
                 borderRadius: 8,
-                marginTop: 24,
+                marginTop: 18,
                 flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
                 width: '100%',
               }}
               onPress={() => setVendorModalVisible(true)}>
@@ -655,6 +653,7 @@ export function HomeScreen() {
             })}
           </View>
         </SafeAreaView>
+        <View style={{height: 50}}></View>
       </ScrollView>
     </View>
   );

@@ -19,7 +19,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import {useAccount, useContractRead, useContractWrite} from 'wagmi';
 import Lens from '../utils/contract';
 import firestore from '@react-native-firebase/firestore';
-import { Notifier, Easing } from 'react-native-notifier';
+import {Notifier, Easing} from 'react-native-notifier';
 import {
   generateSymmetricKey,
   AsymmetricAgent,
@@ -30,7 +30,7 @@ import {generateReport} from '../utils/report';
 
 import {computeScore} from '../utils/credit';
 import {decrypt} from 'react-native-aes-crypto';
-import { ToastComponent } from '../components/toast';
+import {ToastComponent} from '../components/toast';
 
 export function VendorScreen() {
   const [lookupInput, setLookupInput] = useState('');
@@ -143,8 +143,9 @@ export function VendorScreen() {
     const symAgent2 = new SymmetricAgent(decryptedKey);
     // @ts-ignore
     let [cypher2, iv2] = dataScore?.split(':');
-    const decryptedScore = await symAgent2.decrypt(cypher2, iv2);
-    setUserScore(decryptedScore?.toString() || '0');
+    symAgent2.decrypt(cypher2, iv2).then(decryptedScore => {
+      setUserScore(decryptedScore.toString());
+    });
   };
 
   const requestAccess = async () => {
@@ -157,8 +158,12 @@ export function VendorScreen() {
       });
     Notifier.showNotification({
       description: 'Request sent!',
-      Component: (props) => ToastComponent(props?.title || "", props?.description || ""),
-      duration: 4000, showAnimationDuration: 749, showEasing: Easing.ease, hideOnPress: true
+      Component: props =>
+        ToastComponent(props?.title || '', props?.description || ''),
+      duration: 4000,
+      showAnimationDuration: 749,
+      showEasing: Easing.ease,
+      hideOnPress: true,
     });
   };
 
@@ -267,6 +272,18 @@ export function VendorScreen() {
         encryptedVendorToken,
       ],
     });
+    Notifier.showNotification({
+      description: 'Transaction sent!',
+      Component: props =>
+        ToastComponent(props?.title || '', props?.description || ''),
+      duration: 4000,
+      showAnimationDuration: 749,
+      showEasing: Easing.ease,
+      hideOnPress: true,
+    });
+    setLookupInput('');
+    setCanAccess(false);
+    setLooked(false);
   };
 
   return (
@@ -521,7 +538,6 @@ export function VendorScreen() {
               </TouchableOpacity>
             </View>
           )}
-
         </SafeAreaView>
       </ScrollView>
     </View>
