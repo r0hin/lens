@@ -13,13 +13,15 @@ import { Notifier, Easing } from 'react-native-notifier';
 import { SETTINGS, VENDORS } from '../utils/settings';
 import { ToastComponent } from '../components/toast';
 
+import {check, PERMISSIONS, request, RESULTS } from "react-native-permissions";
+import { Camera, CameraType } from 'react-native-camera-kit';
+
 export function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [vendorModalVisible, setVendorModalVisible] = useState(false);
   const [incomingRequests, setIncomingRequests] = useState([]);
   const [approved, setApproved] = useState([]);
   const rnBiometrics = new ReactNativeBiometrics()
-  
   const [addVendorInput, setAddVendorInput] = useState("")
   const [score, setScore] = useState("N/A")
   const account = useAccount();
@@ -74,6 +76,27 @@ export function HomeScreen() {
     const result = await computeScore(dataScore, dataToken, account.address) as string
     setScore(result)
     console.log(result)
+  }
+
+  const openQRModel = async () => {
+    // Check permissions
+    const permission = await check(PERMISSIONS.IOS.CAMERA);
+    if (permission === RESULTS.GRANTED) {
+      setModalVisible(true)
+    }
+    else {
+      const result = await request(PERMISSIONS.IOS.CAMERA);
+      if (result !== RESULTS.GRANTED) {
+        Alert.alert("Error", "Camera permissions are required to scan QR codes")
+      }
+      else {
+        setModalVisible(true)
+      }
+    }
+  }
+
+  const qrScanned = async (data: string) => {
+    Alert.alert("QR Code Scanned", data)
   }
 
   const addVendor = async () => {
@@ -187,28 +210,53 @@ export function HomeScreen() {
           <Modal animationType="slide" presentationStyle="formSheet" visible={modalVisible} onRequestClose={() => { setModalVisible(!modalVisible) }}>
             <View style={{ backgroundColor: "#121315", padding: 24, flex: 1, justifyContent: "center", alignItems: "center" }}>
               <Icon name="chevron-down" size={18} color="#a3a3a3" style={{ position: "absolute", top: 12 }} />
-              <Text>Details</Text>
+              
+              <Camera
+                cameraType={CameraType.Back} // front/back(default)
+                scanBarcode={true}
+                showFrame={true}
+                style={{ width: 300, height: 300 }}
+                laserColor={"#5371FF"}
+                onReadCode={(event: any) => {Alert.alert("hi"); qrScanned(event.nativeEvent.codeStringValue)}}
+              />
+
               <Pressable onPress={() => setModalVisible(!modalVisible)}>
                 <Text>Close</Text>
               </Pressable>
             </View>
           </Modal>
 
-          <TouchableOpacity style={{
-            borderColor: "#121315",
-            borderWidth: 3,
-            borderStyle: "dotted",
-            padding: 12,
-            borderRadius: 8,
-            marginTop: 24,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%"
-          }} onPress={() => setVendorModalVisible(true)}>
-            <Icon name="plus" size={16} color="white" />
-            <Text style={{ color: "white", fontSize: 14, fontWeight: 500, marginLeft: 8 }}>Share with Creditor</Text>
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 24, width: "100%" }}>
+            <TouchableOpacity style={{
+              borderColor: "#121315",
+              borderWidth: 3,
+              borderStyle: "dotted",
+              padding: 12,
+              borderRadius: 8,
+              marginTop: 24,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%"
+            }} onPress={() => setVendorModalVisible(true)}>
+              <Icon name="plus" size={16} color="white" />
+              <Text style={{ color: "white", fontSize: 14, fontWeight: 500, marginLeft: 8 }}>Share with Creditor</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={{
+              borderColor: "#121315",
+              borderWidth: 3,
+              borderStyle: "dotted",
+              padding: 12,
+              borderRadius: 8,
+              marginTop: 24,
+              marginLeft: 0,
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center"
+            }} onPress={openQRModel}>
+              <Icon style={{ color: "white", fontSize: 14, fontWeight: 500, marginHorizontal: 16, paddingVertical: 2 }} name="camera" size={16} color="white" />
+            </TouchableOpacity>
+          </View>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingTop: 24, width: "100%" }}>
             <Text style={{ color: "#a3a3a3", fontSize: 14, textTransform: "uppercase", fontWeight: 400, paddingTop: 24 }}>

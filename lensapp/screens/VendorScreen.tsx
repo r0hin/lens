@@ -16,6 +16,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import {useAccount, useContractRead, useContractWrite} from 'wagmi';
+import QRCode from 'react-native-qrcode-svg';
 import Lens from '../utils/contract';
 import firestore from '@react-native-firebase/firestore';
 import { Notifier, Easing } from 'react-native-notifier';
@@ -463,6 +464,8 @@ export function VendorScreen() {
               </TouchableOpacity>
             </View>
           )}
+
+          <QRCode value={account.address}/>
         </SafeAreaView>
       </ScrollView>
     </View>
