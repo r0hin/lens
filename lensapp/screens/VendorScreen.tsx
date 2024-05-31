@@ -273,7 +273,7 @@ export function VendorScreen() {
       ],
     });
     Notifier.showNotification({
-      description: 'Transaction sent!',
+      description: 'Transaction sending!',
       Component: props =>
         ToastComponent(props?.title || '', props?.description || ''),
       duration: 4000,

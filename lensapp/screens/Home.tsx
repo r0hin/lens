@@ -1,6 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, TextInput, Modal, Pressable, Alert} from 'react-native';
-import {RefreshControl, ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  RefreshControl,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import ReactNativeBiometrics from 'react-native-biometrics';
@@ -150,6 +154,7 @@ export function HomeScreen() {
       reports.map(async (report: string) => {
         const decrypted = await agent.decrypt(report);
         const parsed = parseReport(decrypted);
+        console.log(parsed);
         return parsed;
       }),
     );
@@ -234,7 +239,11 @@ export function HomeScreen() {
         alignItems: 'flex-start',
         backgroundColor: '#000',
       }}>
-      <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} style={{width: '100%'}}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        style={{width: '100%'}}>
         <SafeAreaView style={{padding: 12}}>
           <View
             style={{
@@ -494,9 +503,7 @@ export function HomeScreen() {
                 fontWeight: 400,
                 paddingTop: 24,
               }}>
-              {
-                reports.length ? 'Recent Reports' : 'No recent reports'
-              }
+              {reports.length ? 'Recent Reports' : 'No recent reports'}
             </Text>
             <Text
               style={{

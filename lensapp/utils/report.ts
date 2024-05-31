@@ -20,7 +20,7 @@ export const generateReport = (
   // Ensure scoreDelta has a leading sign and pad to 3 digits and 1 sign
   const formattedScoreDelta =
     scoreDelta.startsWith('+') || scoreDelta.startsWith('-')
-      ? scoreDelta.padStart(4, '0')
+      ? `-${scoreDelta.split('-').join('').padStart(3, '0')}`
       : `+${scoreDelta.padStart(3, '0')}`;
 
   // Convert isPayed to 1 or 0
