@@ -8,7 +8,7 @@ const generateKeyPair = () => {
     QuickCrypto.generateKeyPair(
       'rsa',
       {
-        modulusLength: 4096,
+        modulusLength: 512,
         publicKeyEncoding: {
           type: 'spki',
           format: 'pem',
@@ -72,11 +72,9 @@ class AsymmetricAgent {
   encrypt(data: string): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
-        const encrypted = QuickCrypto.publicEncrypt(
-          this.publicKey,
-          Buffer.from(data, 'utf8'),
-        );
-        resolve(encrypted.toString('base64'));
+        const publicKey = forge.pki.publicKeyFromPem(this.publicKey);
+        const encrypted = publicKey.encrypt(data);
+        resolve(forge.util.encode64(encrypted));
       } catch (err) {
         reject(err);
       }
@@ -86,13 +84,9 @@ class AsymmetricAgent {
   decrypt(data: string): Promise<string> {
     return new Promise((resolve, reject) => {
       try {
-        const decrypted = QuickCrypto.privateDecrypt(
-          {
-            key: this.privateKey,
-          },
-          Buffer.from(data, 'base64'),
-        );
-        resolve(decrypted.toString('utf8'));
+        const privateKey = forge.pki.privateKeyFromPem(this.privateKey);
+        const decrypted = privateKey.decrypt(forge.util.decode64(data));
+        resolve(decrypted);
       } catch (err) {
         reject(err);
       }

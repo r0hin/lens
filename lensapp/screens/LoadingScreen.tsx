@@ -19,10 +19,13 @@ export function LoadingScreen() {
         if (doc.exists) {
           await AsyncStorage.setItem('public', doc.data()?.publicKey)
 
-          // If its a VENDOR, set it to 3
-          setUserOnboarded(3);
+          if (address == "0xfF01A49f2B81C67a50770a97F6f0d8E172a7e357") {
+            setUserOnboarded(3); // 3 = vendor
+          }
+          else { // 1=user
+            setUserOnboarded(1);
+          }
 
-          // setUserOnboarded(1);
         }
         else {
           setUserOnboarded(0);

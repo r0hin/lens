@@ -3,42 +3,77 @@ import { View, Text, TextInput, Modal, Pressable, Alert } from 'react-native';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
-import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import ReactNativeBiometrics from 'react-native-biometrics'
+import { useAccount, useContractRead, usePrepareContractWrite, useContractWrite } from 'wagmi'
+import Lens from '../utils/contract'
+import { computeScore } from '../utils/credit';
+import { SETTINGS } from '../utils/settings';
 
 export function HomeScreen() {
-  const [score, setScore] = useState(0)
-  const [report, setReport] = useState("")
   const [modalVisible, setModalVisible] = useState(false);
   const [vendorModalVisible, setVendorModalVisible] = useState(false);
-  const [addVendorInput, setAddVendorInput] = useState("")
   const rnBiometrics = new ReactNativeBiometrics()
-
-  const { disconnect } = useDisconnect();
+  
+  const [addVendorInput, setAddVendorInput] = useState("")
+  const [score, setScore] = useState("N/A")
   const account = useAccount();
 
-  const queryScore = () => {
-    // using account.address
-    setScore(score + 1)
+
+  const {data:dataVendor, isLoading:isLoadingVendor, isSuccess: isSuccessVendor, write: writeVendor} = useContractWrite({
+    ...Lens,
+    functionName: 'allowVendorAccess',
+  });
+
+  
+  const {
+    data: dataScore,
+    isError: isErrorScore,
+    isLoading: isLoadingScore,
+  } = useContractRead({
+    ...Lens,
+    functionName: 'getCreditScore',
+    args: [account.address],
+  });
+
+    const {
+    data: dataToken,
+    isError: isErrorToken,
+    isLoading: isLoadingToken,
+    isSuccess: isSuccessToken,
+  } = useContractRead({
+    ...Lens,
+    functionName: 'getUserAccessKey',
+    args: [account.address],
+  });
+
+  useEffect(() => {
+    // @ts-ignore
+    getScore(dataScore, dataToken)
+  }, [dataScore, dataToken])
+
+  const getScore = async (dataScore: string, dataToken: string) => {
+    console.log("CALLING")
+    const result = await computeScore(dataScore, dataToken) as string
+    setScore(result)
   }
 
-  const addVendor = () => {
-    rnBiometrics.simplePrompt({ promptMessage: "Confirm credit share" }).then((result) => {
-      if (result.success) {
-        Alert.alert("Success", "Credit score to be shared with vendor")
-      }
-      else {
-        Alert.alert("Error", "Biometric authentication failed")
-      }
-    }).catch((err) => {
+  const addVendor = async () => {
+    let result;
+    if (SETTINGS.enableFaceID) result = await rnBiometrics.simplePrompt({ promptMessage: 'Authenticate with Face ID' });
+    else result = { success: true }
+
+    if (result.success) { // Add vendor, abi call
+
+      writeVendor?.({
+        args: [addVendorInput],
+      })
+
+      Alert.alert("Success", "We sent the transaction to your wallet!")
+      setVendorModalVisible(false)
+    }
+    else {
       Alert.alert("Error", "Biometric authentication failed")
-    })
-  }
-
-  const queryReport = () => {
-    // using account.address
-    setReport("a")
+    }
   }
 
   return (
@@ -47,7 +82,7 @@ export function HomeScreen() {
         <SafeAreaView style={{ padding: 12 }}>
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "flex-end", paddingTop: 24, width: "100%" }}>
             {/* Gradient text */}
-            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>300</Text>
+            <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>{score}</Text>
             <Text style={{ color: "gray", fontSize: 32, textAlign: "center", fontWeight: 400, fontFamily: "SF Mono", paddingBottom: 8, marginLeft: 2, letterSpacing: -3 }}>+8</Text>
           </View>
 
@@ -102,9 +137,6 @@ export function HomeScreen() {
               </View>
 
               <Text style={{ color: "#a3a3a3", fontSize: 12, fontWeight: 400, paddingTop: 12 }}>Note: this action is irreversible.</Text>
-
-
-
 
             </View>
           </Modal>

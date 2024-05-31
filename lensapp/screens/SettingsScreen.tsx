@@ -4,7 +4,7 @@ import { ScrollView, Switch, TouchableOpacity } from 'react-native-gesture-handl
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
-import { useAccount, useDisconnect, useEnsAvatar, useEnsName } from 'wagmi'
+import { useAccount, useDisconnect, useEnsAvatar, useEnsName, useBalance } from 'wagmi'
 import Clipboard from '@react-native-clipboard/clipboard';
 import { W3mAccountButton, useWeb3Modal } from '@web3modal/wagmi-react-native';
 import { SETTINGS } from '../utils/settings';
@@ -18,14 +18,12 @@ export function SettingsScreen() {
   const [addVendorInput, setAddVendorInput] = useState("")
   const rnBiometrics = new ReactNativeBiometrics()
 
-  const { open, close } = useWeb3Modal();
-  const { disconnect } = useDisconnect();
   const account = useAccount();
+  const balance = useBalance({
+    address: account.address,
+  });
 
-  const queryScore = () => {
-    // using account.address
-    setScore(score + 1)
-  }
+  const { open, close } = useWeb3Modal();
 
   const addVendor = () => {
     rnBiometrics.simplePrompt({ promptMessage: "Confirm credit share" }).then((result) => {
@@ -40,18 +38,14 @@ export function SettingsScreen() {
     })
   }
 
-  const queryReport = () => {
-    // using account.address
-    setReport("a")
-  }
-
   return (
     <View style={{ flex: 1, justifyContent: "flex-start", alignItems: "flex-start", backgroundColor: "#000" }}>
       <ScrollView style={{ width: "100%" }}>
         <SafeAreaView style={{ padding: 12 }}>
-          <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", paddingTop: 24, width: "100%" }}>
+          <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center", paddingTop: 24, width: "100%" }}>
             {/* Gradient text */}
             <Text style={{ color: "white", fontSize: 64, textAlign: "center", fontWeight: 800, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>{account.address?.substring(0, 7)}–</Text>
+            <Text style={{ color: "#a3a3a3", fontSize: 24, textAlign: "center", fontWeight: 400, fontFamily: "SF Mono Heavy", letterSpacing: -3 }}>{balance?.data?.formatted.slice(0, 7)} rBTC</Text>
           </View>
 
           <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", paddingTop: 24, width: "100%" }}>

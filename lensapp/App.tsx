@@ -3,6 +3,7 @@ import React from 'react';
 import '@walletconnect/react-native-compat'
 import { WagmiConfig } from 'wagmi'
 import { rootstock } from 'viem/chains'
+import { rootstockTestnet } from './utils/rootstocktn';
 import { createWeb3Modal, defaultWagmiConfig, Web3Modal } from '@web3modal/wagmi-react-native'
 import {
   AnimatedTabBarNavigator,
@@ -30,7 +31,7 @@ const queryClient = new QueryClient()
 
 
 function App(): React.JSX.Element {
-  const chains = [rootstock]
+  const chains = [rootstockTestnet]
   const metadata = {
     name: 'Project Lens',
     description: 'A better way to prove trust',
