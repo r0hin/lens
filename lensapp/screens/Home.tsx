@@ -14,11 +14,16 @@ import {
 } from 'wagmi';
 import Lens from '../utils/contract';
 import {computeScore} from '../utils/credit';
-import Toast from 'react-native-root-toast';
+import {Notifier, Easing} from 'react-native-notifier';
+
 import {SETTINGS, VENDORS} from '../utils/settings';
 import ReportEntry from '../components/ReportEntry';
 import {AsymmetricAgent} from '../utils/crypto';
 import {parseReport} from '../utils/report';
+import {ToastComponent} from '../components/toast';
+
+import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
+import {Camera, CameraType} from 'react-native-camera-kit';
 
 export function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -155,13 +160,45 @@ export function HomeScreen() {
     console.log(decryptedReports);
   };
 
+  const openQRModel = async () => {
+    // Check permissions
+    const permission = await check(PERMISSIONS.IOS.CAMERA);
+    if (permission === RESULTS.GRANTED) {
+      setModalVisible(true);
+    } else {
+      const result = await request(PERMISSIONS.IOS.CAMERA);
+      if (result !== RESULTS.GRANTED) {
+        Alert.alert(
+          'Error',
+          'Camera permissions are required to scan QR codes',
+        );
+      } else {
+        setModalVisible(true);
+      }
+    }
+  };
+
+  const qrScanned = async (data: string) => {
+    Alert.alert('QR Code Scanned', data);
+  };
+
   const addVendor = async () => {
     let result;
 
     const availableVendors = Object.keys(VENDORS);
     if (!availableVendors.includes(addVendorInput)) {
-      Toast.show;
-      Alert.alert('Error', 'Invalid vendor');
+      Notifier.showNotification({
+        description: 'No trusted creditor found!',
+        Component: props =>
+          ToastComponent(props?.title || '', props?.description || ''),
+        duration: 4000,
+        showAnimationDuration: 749,
+        showEasing: Easing.ease,
+        hideOnPress: true,
+      });
+
+      setVendorModalVisible(false);
+
       return;
     }
 
@@ -185,7 +222,15 @@ export function HomeScreen() {
           approved: firestore.FieldValue.arrayUnion(addVendorInput),
         });
 
-      Alert.alert('Success', 'We sent the transaction to your wallet!');
+      Notifier.showNotification({
+        description: 'Transaction sent!',
+        Component: props =>
+          ToastComponent(props?.title || '', props?.description || ''),
+        duration: 4000,
+        showAnimationDuration: 749,
+        showEasing: Easing.ease,
+        hideOnPress: true,
+      });
       setVendorModalVisible(false);
     } else {
       Alert.alert('Error', 'Biometric authentication failed');
@@ -431,38 +476,86 @@ export function HomeScreen() {
                 color="#a3a3a3"
                 style={{position: 'absolute', top: 12}}
               />
-              <Text>Details</Text>
+
+              <Camera
+                cameraType={CameraType.Back} // front/back(default)
+                scanBarcode={true}
+                showFrame={true}
+                style={{width: 300, height: 300}}
+                laserColor={'#5371FF'}
+                onReadCode={(event: any) => {
+                  Alert.alert('hi');
+                  qrScanned(event.nativeEvent.codeStringValue);
+                }}
+              />
+
               <Pressable onPress={() => setModalVisible(!modalVisible)}>
                 <Text>Close</Text>
               </Pressable>
             </View>
           </Modal>
 
-          <TouchableOpacity
+          <View
             style={{
-              borderColor: '#121315',
-              borderWidth: 3,
-              borderStyle: 'dotted',
-              padding: 12,
-              borderRadius: 8,
-              marginTop: 24,
               flexDirection: 'row',
-              justifyContent: 'center',
+              justifyContent: 'space-between',
               alignItems: 'center',
+              paddingTop: 24,
               width: '100%',
-            }}
-            onPress={() => setVendorModalVisible(true)}>
-            <Icon name="plus" size={16} color="white" />
-            <Text
+            }}>
+            <TouchableOpacity
               style={{
-                color: 'white',
-                fontSize: 14,
-                fontWeight: 500,
-                marginLeft: 8,
-              }}>
-              Share with Creditor
-            </Text>
-          </TouchableOpacity>
+                borderColor: '#121315',
+                borderWidth: 3,
+                borderStyle: 'dotted',
+                padding: 12,
+                borderRadius: 8,
+                marginTop: 24,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+              }}
+              onPress={() => setVendorModalVisible(true)}>
+              <Icon name="plus" size={16} color="white" />
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  marginLeft: 8,
+                }}>
+                Share with Creditor
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                borderColor: '#121315',
+                borderWidth: 3,
+                borderStyle: 'dotted',
+                padding: 12,
+                borderRadius: 8,
+                marginTop: 24,
+                marginLeft: 0,
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={openQRModel}>
+              <Icon
+                style={{
+                  color: 'white',
+                  fontSize: 14,
+                  fontWeight: 500,
+                  marginHorizontal: 16,
+                  paddingVertical: 2,
+                }}
+                name="camera"
+                size={16}
+                color="white"
+              />
+            </TouchableOpacity>
+          </View>
 
           <View
             style={{
@@ -656,4 +749,3 @@ export function HomeScreen() {
     </View>
   );
 }
-

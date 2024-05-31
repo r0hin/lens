@@ -40,6 +40,8 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera is used to scan QR codes</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Face ID is used to approve requests to share sensitive information.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

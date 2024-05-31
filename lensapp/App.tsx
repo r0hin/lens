@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { NotifierWrapper } from 'react-native-notifier';
 import '@walletconnect/react-native-compat'
 import { WagmiConfig } from 'wagmi'
 import { rootstock } from 'viem/chains'
@@ -27,9 +28,8 @@ import { CardsScreen } from './screens/CardsScreen';
 import { VendorScreen } from './screens/VendorScreen';
 import { OnboardScreen } from './screens/OnboardScreen';
 import { AuthenticateScreen } from './screens/Authenticate';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 const queryClient = new QueryClient()
-import { RootSiblingParent } from 'react-native-root-siblings';
-
 
 function App(): React.JSX.Element {
   const chains = [rootstockTestnet]
@@ -59,25 +59,27 @@ function App(): React.JSX.Element {
   });
 
   return (
-    <WagmiConfig config={wagmiConfig}>
-      <RootSiblingParent>
-        <QueryClientProvider client={queryClient}> 
-          <StatusBar barStyle={'light-content'} />
-          <NavigationContainer>
-            
-            <Stack.Navigator initialRouteName='Loading' screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Loading" component={LoadingScreen} />
-              <Stack.Screen name="Login" component={LoginScreen} />
-              <Stack.Screen name="Main" component={TabsComponent} />
-              <Stack.Screen name="Onboard" component={OnboardScreen} />
-              <Stack.Screen name="Authenticate" component={AuthenticateScreen} />
-              <Stack.Screen name="Vendor" component={VendorTabsComponent} />
-            </Stack.Navigator>
-          </NavigationContainer>
-          <Web3Modal />
-        </QueryClientProvider>
-      </RootSiblingParent>
-    </WagmiConfig>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NotifierWrapper>
+        <WagmiConfig config={wagmiConfig}>
+          <QueryClientProvider client={queryClient}> 
+            <StatusBar barStyle={'light-content'} />
+            <NavigationContainer>
+              
+              <Stack.Navigator initialRouteName='Loading' screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Loading" component={LoadingScreen} />
+                <Stack.Screen name="Login" component={LoginScreen} />
+                <Stack.Screen name="Main" component={TabsComponent} />
+                <Stack.Screen name="Onboard" component={OnboardScreen} />
+                <Stack.Screen name="Authenticate" component={AuthenticateScreen} />
+                <Stack.Screen name="Vendor" component={VendorTabsComponent} />
+              </Stack.Navigator>
+            </NavigationContainer>
+            <Web3Modal />
+          </QueryClientProvider>
+        </WagmiConfig>
+      </NotifierWrapper>
+    </GestureHandlerRootView>
   );
 }
 

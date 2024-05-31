@@ -18,6 +18,10 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.mono {
+  font-family: "mono", monospace;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
