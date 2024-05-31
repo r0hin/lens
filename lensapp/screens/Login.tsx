@@ -11,12 +11,10 @@ export function LoginScreen() {
       <Image source={require("../assets/logo.png")} style={{width: 120, height: 120}} />
       <Text style={{color: "white", paddingBottom: 148, fontSize: 16}}>A better way to prove trust.</Text>
       <W3mButton label="Connect to Lens" />
-      <Text style={{color: "white", marginVertical: 24, fontSize: 16}}>You can also join without a wallet in guest mode:</Text>
-      <TouchableOpacity onPress={async () => {
+      {/* <TouchableOpacity onPress={async () => {
         navigation.navigate("Main" as never);
       }}>
-        <Text style={{color: "#5371FF", fontSize: 16}}>Continue</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
     </View>
   );

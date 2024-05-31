@@ -494,7 +494,9 @@ export function HomeScreen() {
                 fontWeight: 400,
                 paddingTop: 24,
               }}>
-              Recent Reports
+              {
+                reports.length ? 'Recent Reports' : 'No recent reports'
+              }
             </Text>
             <Text
               style={{
@@ -536,9 +538,9 @@ export function HomeScreen() {
             {incomingRequests.length && approved.length
               ? 'Creditors & Requests'
               : incomingRequests.length
-              ? 'Creditors'
-              : approved.length
               ? 'Requests'
+              : approved.length
+              ? 'Creditors'
               : 'No creditors or requests'}
           </Text>
 
