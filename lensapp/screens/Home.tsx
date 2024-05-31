@@ -22,9 +22,6 @@ import {AsymmetricAgent} from '../utils/crypto';
 import {parseReport} from '../utils/report';
 import {ToastComponent} from '../components/toast';
 
-import {check, PERMISSIONS, request, RESULTS} from 'react-native-permissions';
-import {Camera, CameraType} from 'react-native-camera-kit';
-
 export function HomeScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [vendorModalVisible, setVendorModalVisible] = useState(false);
@@ -127,7 +124,7 @@ export function HomeScreen() {
 
   const getScore = async () => {
     refetchScore?.(); // @ts-ignore
-    const result = (await computeScore(
+    const result = (await computeScore( // @ts-ignore
       dataScore,
       dataToken,
       account.address,
@@ -158,28 +155,6 @@ export function HomeScreen() {
     decryptedReports.reverse();
     setReports(decryptedReports);
     console.log(decryptedReports);
-  };
-
-  const openQRModel = async () => {
-    // Check permissions
-    const permission = await check(PERMISSIONS.IOS.CAMERA);
-    if (permission === RESULTS.GRANTED) {
-      setModalVisible(true);
-    } else {
-      const result = await request(PERMISSIONS.IOS.CAMERA);
-      if (result !== RESULTS.GRANTED) {
-        Alert.alert(
-          'Error',
-          'Camera permissions are required to scan QR codes',
-        );
-      } else {
-        setModalVisible(true);
-      }
-    }
-  };
-
-  const qrScanned = async (data: string) => {
-    Alert.alert('QR Code Scanned', data);
   };
 
   const addVendor = async () => {
@@ -278,7 +253,9 @@ export function HomeScreen() {
                 marginLeft: 2,
                 letterSpacing: -3,
               }}>
+              {/* @ts-ignore */}
               {reports[0] && reports[0].scoreDelta > 0 ? '+' : '-'}
+              {/* @ts-ignore */}
               {reports[0] && reports[0].scoreDelta}
             </Text>
           </View>
@@ -455,46 +432,6 @@ export function HomeScreen() {
             </View>
           </Modal>
 
-          <Modal
-            animationType="slide"
-            presentationStyle="formSheet"
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}>
-            <View
-              style={{
-                backgroundColor: '#121315',
-                padding: 24,
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Icon
-                name="chevron-down"
-                size={18}
-                color="#a3a3a3"
-                style={{position: 'absolute', top: 12}}
-              />
-
-              <Camera
-                cameraType={CameraType.Back} // front/back(default)
-                scanBarcode={true}
-                showFrame={true}
-                style={{width: 300, height: 300}}
-                laserColor={'#5371FF'}
-                onReadCode={(event: any) => {
-                  Alert.alert('hi');
-                  qrScanned(event.nativeEvent.codeStringValue);
-                }}
-              />
-
-              <Pressable onPress={() => setModalVisible(!modalVisible)}>
-                <Text>Close</Text>
-              </Pressable>
-            </View>
-          </Modal>
-
           <View
             style={{
               flexDirection: 'row',
@@ -527,33 +464,6 @@ export function HomeScreen() {
                 }}>
                 Share with Creditor
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{
-                borderColor: '#121315',
-                borderWidth: 3,
-                borderStyle: 'dotted',
-                padding: 12,
-                borderRadius: 8,
-                marginTop: 24,
-                marginLeft: 0,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              onPress={openQRModel}>
-              <Icon
-                style={{
-                  color: 'white',
-                  fontSize: 14,
-                  fontWeight: 500,
-                  marginHorizontal: 16,
-                  paddingVertical: 2,
-                }}
-                name="camera"
-                size={16}
-                color="white"
-              />
             </TouchableOpacity>
           </View>
 
@@ -595,9 +505,9 @@ export function HomeScreen() {
             {reports.map((report, index) => {
               return (
                 <ReportEntry
-                  key={index}
-                  vendor={report.vendorKey}
-                  score={report.scoreDelta}
+                  key={index} // @ts-ignore
+                  vendor={report.vendorKey} // @ts-ignore
+                  score={report.scoreDelta} // @ts-ignore
                   date={report.timeAgoStr}
                 />
               );

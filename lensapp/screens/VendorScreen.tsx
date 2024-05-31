@@ -17,7 +17,6 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import {useAccount, useContractRead, useContractWrite} from 'wagmi';
-import QRCode from 'react-native-qrcode-svg';
 import Lens from '../utils/contract';
 import firestore from '@react-native-firebase/firestore';
 import { Notifier, Easing } from 'react-native-notifier';
@@ -166,7 +165,7 @@ export function VendorScreen() {
   // with appendScoreInput
   const appendScore = async () => {
     const message = generateReport(
-      new Date(),
+      new Date(), // @ts-ignore
       account.address,
       appendScoreInput,
       isPayed,
@@ -523,7 +522,6 @@ export function VendorScreen() {
             </View>
           )}
 
-          <QRCode value={account.address}/>
         </SafeAreaView>
       </ScrollView>
     </View>

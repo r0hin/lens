@@ -8979,13 +8979,11 @@ __metadata:
     react-native-aes-crypto: ^3.0.2
     react-native-animated-nav-tab-bar: ^3.1.10
     react-native-biometrics: ^3.0.1
-    react-native-camera-kit: ^13.0.0
     react-native-gesture-handler: ^2.16.2
     react-native-get-random-values: ^1.11.0
     react-native-mmkv: ^2.12.2
     react-native-modal: ^13.0.1
     react-native-notifier: ^1.9.0
-    react-native-permissions: ^4.1.5
     react-native-qrcode-svg: ^6.3.1
     react-native-quick-crypto: 0.7.0-rc.9
     react-native-safe-area-context: ^4.10.1
@@ -9151,7 +9149,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.14.2, lodash@npm:^4.17.21":
+"lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -10870,18 +10868,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-camera-kit@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "react-native-camera-kit@npm:13.0.0"
-  dependencies:
-    lodash: ^4.14.2
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 5d795bf46935012d501d421c414cac24afd6ce4bd753ad4aedd621bbf5034650bfd6285bea0ae32e62d49316a5a8976b73676bcaefea7496abd3141f7337f382
-  languageName: node
-  linkType: hard
-
 "react-native-gesture-handler@npm:^2.16.2":
   version: 2.16.2
   resolution: "react-native-gesture-handler@npm:2.16.2"
@@ -10950,20 +10936,6 @@ __metadata:
     react-native: "*"
     react-native-gesture-handler: "*"
   checksum: 8d7295dc1efeb52c98ea0423630468b185fdcdcd195c37ca538a6e646f667b36450145a5830dfe5cef1b5547b04fe0a2b4e55dd9171839e5f3e7082b631f51ab
-  languageName: node
-  linkType: hard
-
-"react-native-permissions@npm:^4.1.5":
-  version: 4.1.5
-  resolution: "react-native-permissions@npm:4.1.5"
-  peerDependencies:
-    react: ">=18.1.0"
-    react-native: ">=0.70.0"
-    react-native-windows: ">=0.70.0"
-  peerDependenciesMeta:
-    react-native-windows:
-      optional: true
-  checksum: dc4b366a0f561a47f032c027eb703a2be45e801788b915ed583e38f617eea23656eb63a77b17fb3a663fe3199b2ec25788f799e751421634e35a64f5258feed9
   languageName: node
   linkType: hard
 
