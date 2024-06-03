@@ -22,6 +22,11 @@ export default function Home() {
               White Paper
             </button>
           </Link>
+          <Link href={"https://projectlens.xyz/deck.pdf"}>
+            <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#5371FF] text-[#a3a3a3]">
+              Deck
+            </button>
+          </Link>
           <Link href={"mailto:hi@projectlens.xyz"}>
             <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#404040] text-[#a3a3a3]">
               Contact
