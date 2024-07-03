@@ -27,7 +27,7 @@ export default function Home() {
               Deck
             </button>
           </Link>
-          <Link href={"mailto:hi@projectlens.xyz"}>
+          <Link href={"mailto:rohin@projectlens.xyz"}>
             <button className="font-bold py-3 px-6 m-2 rounded-xl border border-[#404040] text-[#a3a3a3]">
               Contact
             </button>
