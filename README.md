@@ -1,8 +1,6 @@
 # Lens
 
-```
 This repository contains the source code for Lens, including a React Native front-end client, Solidity smart contract, and our Lenscrypt 2.0 encryption protocol.
-```
 
 Read more at [our website](https://lens.red.r0h.in).
 
